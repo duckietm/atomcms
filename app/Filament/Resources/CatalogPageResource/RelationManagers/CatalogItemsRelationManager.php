@@ -264,7 +264,23 @@ class CatalogItemsRelationManager extends RelationManager
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
-                    ->relationship('itemBase', 'type')
+                    ->query(function (Builder $query, array $data): Builder {
+                        return empty($data['values'])
+                            ? $query
+                            : $query->whereHas('itemBase', function (Builder $query) use ($data) {
+                                $query->whereIn('type', $data['values']);
+                            });
+                    })
+                    ->options(
+                        fn () => ItemBase::query()
+                            ->select('type')
+                            ->distinct()
+                            ->orderBy('type')
+                            ->pluck('type', 'type')
+                            ->toArray()
+                    )
+                    ->multiple()
+                    ->searchable()
                     ->preload(),
 
                 Tables\Filters\TernaryFilter::make('club_only')
