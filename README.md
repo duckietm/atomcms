@@ -15,7 +15,7 @@ Please note that Atom CMS is provided as an educational resource for learning pu
 The creation of Atom CMS was driven by the desire to widen the options available for people when choosing a CMS for their new journey. By valuing community input and collaboration, Atom aims to offer a modern and user-friendly system that is easy to understand and work with. Additionally, Atom CMS includes a built-in theme system allowing you the flexibility to use any CSS framework you prefer or even opt for a fully customized vanilla approach. This enables you to tailor the platform to your specific needs and preferences, ensuring a truly unique user experience.
 
 Check out the fantastic trio that brings it all together:
-- **PHP (Laravel 10.x)**: At the core of Atom CMS lies Laravel 10.x, a modern and elegant PHP framework that simplifies the development process. Laravel's extensive documentation can be found [here](https://laravel.com/docs/9.x).
+- **PHP (Laravel 11.x)**: At the core of Atom CMS lies Laravel 10.x, a modern and elegant PHP framework that simplifies the development process. Laravel's extensive documentation can be found [here](https://laravel.com/docs/9.x).
 - **Vite**: As a next-generation frontend build tool, Vite empowers Atom CMS with lightning-fast development and production speeds. Dive into the Vite documentation [here](https://vitejs.dev/) to explore its full potential.
 - **TailwindCSS**: To ensure a visually stunning and responsive design, Atom CMS incorporates TailwindCSS, a utility-first CSS framework. Learn more about TailwindCSS and its installation process from the official [docs](https://tailwindcss.com/docs/installation)
 
@@ -23,10 +23,9 @@ Check out the fantastic trio that brings it all together:
 If you are new to Laravel and want to build your own features, we highly recommend the following free resources:
 
 - Laravel Bootcamp: [https://bootcamp.laravel.com/](https://bootcamp.laravel.com/)
-- Laravel 8 from Scratch: [https://laracasts.com/series/laravel-8-from-scratch](https://laracasts.com/series/laravel-8-from-scratch)
-- What's New in Laravel 9: [https://laracasts.com/series/whats-new-in-laravel-9](https://laracasts.com/series/whats-new-in-laravel-9)
+- Laravel 11 from Scratch: [https://laracasts.com/series/30-days-to-learn-laravel-11](https://laracasts.com/series/30-days-to-learn-laravel-11)
 
-Laracasts is an official learning platform for Laravel, so you can trust the quality of the content and learn best practices from some of the best and most experienced teacher within the field.
+Laracasts is considered an official learning platform for Laravel, so you can trust the quality of the content and learn best practices from some of the best and most experienced teacher within the field.
 
 ### 🤝 Migrating from Another CMS
 If you're migrating from another CMS like Cosmic CMS and is unsure what tables to remove or worry about colliding tables names, then fear no more!
@@ -143,18 +142,20 @@ You can find the documentation, addons, and tips & tricks on **[https://github.c
 ### 🔥 Credits
 Atom CMS is made possible by the contributions of numerous developers, designers, and community members.
 
--   **Kasja** - Helping with design, ideas & GFX
--   **Nicollas** - Dark mode, Turbolinks, Performance improvements, Article reactions, User sessions, Layout improvements & PT-BR translations
--   **Dominic** - Performance improvements & User sessions
--   **Oliver** - Profile page & Finnish translations
+-   **Kasja** - Helping with various design choices, designing Dusk theme, ideas & GFX
+-   **Inicollas** - Dark mode, Turbolinks, Performance improvements, Article reactions, User sessions, Layout improvements, PT-BR translations, originally creating the integrated housekeeping.
+-   **Kani** - Rcon system & FindRetros API & creating/maintaining Atom CMS v2
+-   **Dominic** - Performance improvements & User sessions, generally helping improving the CMS
 -   **Beny** - Findretros API fixes & CF Fixes
 -   **Live** - French translations, bugfixes & tweaks
 -   **MisterDeen** - Custom Discord widget, bugfixes & tweaks
--   **EntenKoeniq#0001** - Automatic language registration, auto color scheme selection, rooms page & profile page fixes,
+-   **EntenKoeniq** - Automatic language registration, auto color scheme selection, rooms page & profile page fixes,
+-   **DuckieTM** - Adjustments to the integreated housekeeping,
 -   **DamienJolly** - Bugfixes
 -   **Danbo** - Bugfixes
 -   **Diddy/Josh** - Code readability improvements
--   **Damue & EntenKoeniq#0001** - German translations
+-   **Oliver** - Finnish translations
+-   **Damue & EntenKoeniq** - German translations
 -   **Talion** - Turkish translations
 -   **CentralCee, Rille & Tuborgs** - Swedish translations
 -   **Yannick** - Netherland translations
@@ -162,6 +163,5 @@ Atom CMS is made possible by the contributions of numerous developers, designers
 -   **Lorenzune** - Italian translations
 -   **Twana** - Norwegian translations
 -   **Plow** - French translations
--   **Kani** - Rcon System & Findretros API
--   **Sonay** - Material theme
+-   **Sonay** - Creating material theme
 -   **Raizer** - Circinus
