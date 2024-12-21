@@ -297,10 +297,10 @@ class CatalogItemsRelationManager extends RelationManager
                 Tables\Actions\EditAction::make()->label('Edit Catalog Item'),
 
                 Action::make('editItemBase')
-                    ->label('Edit Furniture')
+                    ->label('Edit Item base')
                     ->icon('heroicon-m-cube')
                     ->modalWidth('3xl')
-                    ->modalHeading('Edit Furniture Base')
+                    ->modalHeading('Edit Item Base')
                     ->fillForm(function ($record) {
                         $itemBase = $record->itemBase;
                         if (!$itemBase) {
