@@ -4,6 +4,8 @@
 /public/client
 /public/storage
 /storage/*.key
+/storage/app/public
+/storage/framework/*
 /vendor
 /public/static
 .env
