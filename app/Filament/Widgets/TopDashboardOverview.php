@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Miscellaneous\CameraWeb;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Camera;
@@ -14,7 +15,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 class TopDashboardOverview extends BaseWidget
 {
 	protected static ?int $sort = 1;
-	
+
     protected function getStats(): array
     {
         return [
@@ -36,7 +37,7 @@ class TopDashboardOverview extends BaseWidget
                 ->chart([20, 20])
                 ->color('warning'),
 
-            Stat::make(__('filament::resources.stats.photos_count.title'), Number::format(Camera::count(), '0', '1', app()->getLocale()))
+            Stat::make(__('filament::resources.stats.photos_count.title'), Number::format(CameraWeb::count(), '0', '1', app()->getLocale()))
                 ->description(__('filament::resources.stats.photos_count.description'))
                 ->descriptionIcon('heroicon-m-camera', IconPosition::Before)
                 ->chart([20, 20])
