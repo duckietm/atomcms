@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Atom;
 
+use App\Models\Miscellaneous\CameraWeb;
 use Filament\Tables;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -13,16 +14,19 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use App\Models\Camera;
 
-class FotoResource extends Resource
+class CameraWebResource extends Resource
 {
-    protected static ?string $model = Camera::class;
-	
+    protected static ?string $model = CameraWeb::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-photo';
-	
+
 	protected static ?string $navigationGroup = 'Website';
-	
+
+    protected static ?string $slug = 'camera-web';
+
+    protected static ?string $pluralModelLabel = 'photos';
 	protected static ?string $navigationLabel = 'Web Camera';
-	
+
 	public static function form(Form $form): Form
 {
     return $form
@@ -72,8 +76,8 @@ class FotoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListFotos::route('/'),
-            'edit' => Pages\EditFoto::route('/{record}/edit'),
+            'index' => Pages\ListCameraWeb::route('/'),
+            'edit' => Pages\EditCameraWeb::route('/{record}/edit'),
         ];
     }
 
