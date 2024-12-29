@@ -286,9 +286,9 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return hasPermission('housekeeping_access');
+        return hasHousekeepingPermission('can_access_housekeeping');
     }
-	
+
 	public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

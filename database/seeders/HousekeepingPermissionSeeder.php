@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\HousekeepingPermission;
+use App\Models\WebsiteHousekeepingPermission;
 use Illuminate\Database\Seeder;
 
 class HousekeepingPermissionSeeder extends Seeder
@@ -11,7 +11,7 @@ class HousekeepingPermissionSeeder extends Seeder
     {
         $permissions = [
             [
-                'permission' => 'can_login',
+                'permission' => 'can_access_housekeeping',
                 'min_rank' => 6,
                 'description' => 'The minimum rank required before being able to login to the housekeeping',
             ],
@@ -158,7 +158,7 @@ class HousekeepingPermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            HousekeepingPermission::query()->firstOrCreate(['permission' => $permission['permission']], [
+            WebsiteHousekeepingPermission::query()->firstOrCreate(['permission' => $permission['permission']], [
                 'permission' => $permission['permission'],
                 'min_rank' => $permission['min_rank'],
                 'description' => $permission['description'],

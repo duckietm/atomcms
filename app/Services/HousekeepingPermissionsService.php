@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\HousekeepingPermission;
+use App\Models\WebsiteHousekeepingPermission;
 use Illuminate\Support\Collection;
 
 class HousekeepingPermissionsService
@@ -11,7 +11,7 @@ class HousekeepingPermissionsService
 
     public function __construct()
     {
-        $this->permissions = HousekeepingPermission::all()->pluck('min_rank', 'permission');
+        $this->permissions = WebsiteHousekeepingPermission::all()->pluck('min_rank', 'permission');
     }
 
     public function getOrDefault(string $permissionName, bool $default = false): bool

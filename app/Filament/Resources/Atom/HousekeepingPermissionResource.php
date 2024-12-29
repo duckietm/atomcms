@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Atom;
 
 use App\Filament\Resources\Atom\HousekeepingPermissionResource\Pages;
 use App\Filament\Resources\Atom\HousekeepingPermissionResource\RelationManagers;
-use App\Models\HousekeepingPermission;
+use App\Models\WebsiteHousekeepingPermission;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class HousekeepingPermissionResource extends Resource
 {
-    protected static ?string $model = HousekeepingPermission::class;
+    protected static ?string $model = WebsiteHousekeepingPermission::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
 
