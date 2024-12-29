@@ -19,6 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Rmsramos\Activitylog\ActivitylogPlugin;
+use Rmsramos\Activitylog\Resources\ActivitylogResource;
 
 class AdminFilamentPanelProvider extends PanelProvider
 {
@@ -62,7 +63,10 @@ class AdminFilamentPanelProvider extends PanelProvider
 					->label('Log')
 					->pluralLabel('Audit Log')
 					->navigationGroup('Audit')
-					->navigationCountBadge(true),				
+					->navigationCountBadge(true)
+                    ->authorize(function ($user) {
+                        return $user->can('viewAny', ActivitylogResource::getModel());
+                    }),
 			]);
     }
 }
