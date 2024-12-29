@@ -25,6 +25,8 @@ class HousekeepingPermissionResource extends Resource
     protected static ?string $navigationGroup = 'Website';
 
     protected static ?string $slug = 'website/housekeeping-permissions';
+    
+    protected static ?string $navigationLabel = 'Housekeeping permissions';
 
     public static string $translateIdentifier = 'housekeeping-permissions';
 
