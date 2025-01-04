@@ -5,6 +5,7 @@ namespace App\Filament\Resources\User\UserResource\Pages;
 use App\Models\Game\Player\UserCurrency;
 use Filament\Actions;
 use App\Services\RconService;
+use Filament\Support\Exceptions\Halt;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -37,12 +38,15 @@ class EditUser extends EditRecord
         return static::getModel()::query()->with(['currencies', 'settings']);
     }
 
+    /**
+     * @throws Halt
+     */
     protected function beforeSave(): void
     {
         $user = $this->getRecord();
         $data = $this->form->getState();
 
-        if ($data['rank'] >= auth()->user()->rank) {
+        if ($data['rank'] > auth()->user()->rank) {
             Notification::make()
                 ->danger()
                 ->title(__('You cannot edit this user!'))
@@ -50,7 +54,6 @@ class EditUser extends EditRecord
                 ->send();
 
             $this->halt();
-            return;
         }
 
         $rconEnabled = config('hotel.rcon.enabled');
@@ -96,7 +99,7 @@ class EditUser extends EditRecord
 		if ($updatedCurrencyAmount == $currency->amount) {
 			return;
 		}
-		
+
         $updated = $user->currencies()->where('type', $currency->type)->update(['amount' => $updatedCurrencyAmount]);
 
         if ($updated) {
