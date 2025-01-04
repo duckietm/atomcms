@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\User\UserResource\Pages;
 
+use App\Actions\SendCurrency;
+use App\Enums\CurrencyTypes;
 use App\Models\Game\Player\UserCurrency;
 use Filament\Actions;
 use App\Services\RconService;
@@ -56,7 +58,6 @@ class EditUser extends EditRecord
             $this->halt();
         }
 
-        $rconEnabled = config('hotel.rcon.enabled');
         $rcon = app(RconService::class);
 
         if (!$user->online) {
@@ -66,7 +67,7 @@ class EditUser extends EditRecord
             return;
         }
 
-        if ($user->online && !$rconEnabled) {
+        if ($user->online && !$rcon->isConnected()) {
             Notification::make()
                 ->danger()
                 ->title(__('RCON is not enabled!'))
@@ -74,15 +75,11 @@ class EditUser extends EditRecord
                 ->send();
 
             $this->halt();
-            return;
         }
 
         DB::transaction(function () use ($user, $data, $rcon) {
             if ($data['credits'] != $user->credits) {
-                $rcon->sendSafelyFromDashboard('giveCurrency',
-                    [$user, 'credits', -$user->credits + $data['credits']],
-                    'RCON: Failed to send credits'
-                );
+                $rcon->giveCredits($user, -$user->credits + $data['credits']);
             }
 
             $this->checkUsernameChangedPermission($user, $data, $rcon);
@@ -124,23 +121,33 @@ class EditUser extends EditRecord
     {
         if ($data['allow_change_username'] == $user->settings->can_change_name) return;
 
-        $rcon->sendSafelyFromDashboard('changeUsername',
-            [$user, $data['allow_change_username']],
-            'RCON: Failed to set can_change_username'
-        );
+        if (!$rcon->isConnected()) {
+            Notification::make()
+                ->danger()
+                ->title(__('RCON is not enabled!'))
+                ->body(__('You cannot edit users because RCON is not enabled and the user is online.'))
+                ->send();
+
+            $this->halt();
+        }
+
+        $rcon->disconnectUser($user);
+        $user->settings->update(['can_change_name' => $data['allow_change_username'] ? '1' : '0']);
     }
 
     private function treatChangedCurrencies(Model $user, array $data, RconService $rcon): void
     {
         $user->currencies->each(function (UserCurrency $currency) use ($data, $user, $rcon) {
             $updatedCurrencyAmount = $data["currency_{$currency->type}"] ?? $currency->amount;
+            $currencyType = match ($currency->type) {
+                CurrencyTypes::Duckets => 'duckets',
+                CurrencyTypes::Diamonds => 'diamonds',
+                CurrencyTypes::Points => 'points',
+            };
 
             if ($updatedCurrencyAmount == $currency->amount) return;
 
-            $rcon->sendSafelyFromDashboard('giveCurrency',
-                [$user, $currency->type, -$currency->amount + $updatedCurrencyAmount],
-                "RCON: Failed to send a currency"
-            );
+            app(SendCurrency::class)->execute($user, $currencyType, -$currency->amount + $updatedCurrencyAmount);
         });
     }
 
@@ -149,23 +156,50 @@ class EditUser extends EditRecord
         if ($data['rank'] == $user->rank) return;
         if ($data['rank'] > auth()->user()->rank) return;
 
-        if ($user->online) {
-            $rcon->sendSafelyFromDashboard('alertUser',
-                [$user, 'Your rank has been changed. Please, re-enter.'],
-                "RCON: Failed to send a user alert"
-            );
+        if ($user->online && !$rcon->isConnected()) {
+            Notification::make()
+                ->danger()
+                ->title(__('RCON is not enabled!'))
+                ->body(__('You cannot edit users because RCON is not enabled and the user is online.'))
+                ->send();
 
-            sleep(2);
+            $this->halt();
         }
 
-        $rcon->sendSafelyFromDashboard('disconnectUser', [$user], "RCON: Failed to disconnect a user");
-        $rcon->sendSafelyFromDashboard('setRank', [$user, $data['rank']], "RCON: Failed to update the user rank");
+        if (!$user->online) {
+            $user->update(['rank' => $data['rank']]);
+
+            return;
+        }
+
+        $rcon->alertUser($user, __('You have been disconnected because your rank has been changed. Please re-enter the hotel.'));
+        sleep(2);
+
+        $rcon->disconnectUser($user);
+        $rcon->setRank($user, $data['rank']);
     }
 
     private function treatChangedUserMotto(Model $user, array $data, RconService $rcon): void
     {
         if ($data['motto'] == $user->motto) return;
 
-        $rcon->sendSafelyFromDashboard('setMotto', [$user, $data['motto']], "RCON: Failed to update the user motto");
+        if ($user->online && !$rcon->isConnected()) {
+            Notification::make()
+                ->danger()
+                ->title(__('RCON is not enabled!'))
+                ->body(__('You cannot edit users because RCON is not enabled and the user is online.'))
+                ->send();
+
+            $this->halt();
+        }
+
+        if (!$user->online) {
+            $user->update(['motto' => $data['motto']]);
+
+            return;
+        }
+
+        $rcon->setMotto($user, $data['motto']);
+        $rcon->alertUser($user, __('Your motto has been changed by a staff member.'));
     }
 }

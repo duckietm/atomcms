@@ -95,7 +95,7 @@ class RconService
     /**
      * @throws RconConnectionException|JsonException
      */
-    public function sendGift(User $user, int $item_id, string $message = 'Here is a gift.'): void
+    public function sendGift($user, int $item_id, string $message = 'Here is a gift.'): void
     {
         $this->sendCommand('sendgift', [
             'user_id' => $user->id,
@@ -107,7 +107,7 @@ class RconService
     /**
      * @throws RconConnectionException|JsonException
      */
-    public function giveCredits(User $user, int $credits): void
+    public function giveCredits($user, int $credits): void
     {
         $this->sendCommand('givecredits', [
             'user_id' => $user->id,
@@ -118,7 +118,7 @@ class RconService
     /**
      * @throws RconConnectionException|JsonException
      */
-    public function giveBadge(User $user, string $badge): void
+    public function giveBadge($user, string $badge): void
     {
         $this->sendCommand('givebadge', [
             'user_id' => $user->id,
@@ -129,7 +129,7 @@ class RconService
     /**
      * @throws RconConnectionException|JsonException
      */
-    public function setMotto(User $user, string $motto): void
+    public function setMotto($user, string $motto): void
     {
         $this->sendCommand('setmotto', [
             'user_id' => $user->id,
@@ -148,7 +148,7 @@ class RconService
     /**
      * @throws RconConnectionException|JsonException
      */
-    public function disconnectUser(User $user): void
+    public function disconnectUser($user): void
     {
         $this->sendCommand('disconnect', [
             'user_id' => $user->id,
@@ -159,7 +159,7 @@ class RconService
     /**
      * @throws RconConnectionException|JsonException
      */
-    public function givePoints(User $user, CurrencyTypes $type, int $amount): void
+    public function givePoints($user, CurrencyTypes $type, int $amount): void
     {
         $this->sendCommand('givepoints', [
             'user_id' => $user->id,
@@ -172,25 +172,25 @@ class RconService
      * @throws RconConnectionException
      * @throws JsonException
      */
-    public function giveGotw(User $user, int $amount): void
+    public function giveGotw($user, int $amount): void
     {
-        $this->givePoints($user, CurrencyTypes::POINTS, $amount);
+        $this->givePoints($user, CurrencyTypes::Points, $amount);
     }
 
     /**
      * @throws RconConnectionException
      * @throws JsonException
      */
-    public function giveDiamonds(User $user, int $amount): void
+    public function giveDiamonds($user, int $amount): void
     {
-        $this->givePoints($user, CurrencyTypes::DIAMONDS, $amount);
+        $this->givePoints($user, CurrencyTypes::Diamonds, $amount);
     }
 
     /**
      * @throws RconConnectionException
      * @throws JsonException
      */
-    public function giveDuckets(User $user, int $amount): void
+    public function giveDuckets($user, int $amount): void
     {
         $this->givePoints($user, CurrencyTypes::DUCKETS, $amount);
     }
@@ -199,7 +199,7 @@ class RconService
      * @throws RconConnectionException
      * @throws JsonException
      */
-    public function setRank(User $user, int $rank): void
+    public function setRank($user, int $rank): void
     {
         $this->sendCommand('setrank', [
             'user_id' => $user->id,
@@ -220,7 +220,7 @@ class RconService
      * @throws RconConnectionException
      * @throws JsonException
      */
-    public function alertUser(User $user, string $message): void
+    public function alertUser($user, string $message): void
     {
         $this->sendCommand('alertuser', [
             'user_id' => $user->id,
@@ -232,7 +232,7 @@ class RconService
      * @throws RconConnectionException
      * @throws JsonException
      */
-    public function forwardUser(User $user, int $roomId): void
+    public function forwardUser($user, int $roomId): void
     {
         $this->sendCommand('forwarduser', [
             'user_id' => $user->id,
@@ -244,7 +244,7 @@ class RconService
      * @throws RconConnectionException
      * @throws JsonException
      */
-    public function updateConfig(User $user, string $command): void
+    public function updateConfig($user, string $command): void
     {
         $this->sendCommand('executecommand', [
             'user_id' => $user->id,
