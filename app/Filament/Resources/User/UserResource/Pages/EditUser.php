@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Filament\Resources\User\UserResource;
 
 class EditUser extends EditRecord
@@ -55,7 +57,9 @@ class EditUser extends EditRecord
         $rcon = app(RconService::class);
 
         if (!$user->online) {
-            $this->treatChangedCurrenciesWithoutRcon($user, $data);
+            DB::transaction(function () use ($user, $data) {
+                $this->treatChangedCurrenciesWithoutRcon($user, $data);
+            });
             return;
         }
 
@@ -70,40 +74,48 @@ class EditUser extends EditRecord
             return;
         }
 
-        if ($data['credits'] != $user->credits) {
-            $rcon->sendSafelyFromDashboard('giveCurrency',
-                [$user, 'credits', -$user->credits + $data['credits']],
-                'RCON: Failed to send credits'
-            );
-        }
+        DB::transaction(function () use ($user, $data, $rcon) {
+            if ($data['credits'] != $user->credits) {
+                $rcon->sendSafelyFromDashboard('giveCurrency',
+                    [$user, 'credits', -$user->credits + $data['credits']],
+                    'RCON: Failed to send credits'
+                );
+            }
 
-        $this->checkUsernameChangedPermission($user, $data, $rcon);
-        $this->treatChangedCurrencies($user, $data, $rcon);
-        $this->treatChangedUserRank($user, $data, $rcon);
-        $this->treatChangedUserMotto($user, $data, $rcon);
+            $this->checkUsernameChangedPermission($user, $data, $rcon);
+            $this->treatChangedCurrencies($user, $data, $rcon);
+            $this->treatChangedUserRank($user, $data, $rcon);
+            $this->treatChangedUserMotto($user, $data, $rcon);
+        });
     }
 
     private function treatChangedCurrenciesWithoutRcon(Model $user, array $data): void
-    {
-        if ($data['credits'] != $user->credits) {
-            $user->credits = $data['credits'];
+	{
+		$user->currencies->each(function (UserCurrency $currency) use ($data, $user) {
+        $updatedCurrencyAmount = $data["currency_{$currency->type}"] ?? $currency->amount;
+		if ($updatedCurrencyAmount == $currency->amount) {
+			return;
+		}
+		
+        $updated = $user->currencies()->where('type', $currency->type)->update(['amount' => $updatedCurrencyAmount]);
+
+        if ($updated) {
+            activity()
+                ->performedOn($currency)
+                ->withProperties(['old_amount' => $currency->amount, 'new_amount' => $updatedCurrencyAmount, 'user_id' => $user->id, 'type' => $currency->type])
+                ->event('updated')
+                ->log("Currency updated for user {$user->username}");
+
+        } else {
+            activity()
+                ->withProperties(['user_id' => $user->id, 'type' => $currency->type])
+                ->event('failed_update')
+                ->log("Failed to update currency for user {$user->username}");
         }
+    });
 
-        $user->currencies->each(function (UserCurrency $currency) use ($data, $user) {
-            $updatedCurrencyAmount = collect($data)
-                ->get("currency_{$currency->type}", $currency->amount);
-
-            if ($updatedCurrencyAmount == $currency->amount) return;
-
-            $user->currencies()->whereType($currency->type)->update([
-                'amount' => $updatedCurrencyAmount
-            ]);
-        });
-
-        $user->settings->update([
-            'can_change_name' => $data['allow_change_username'] ? '1' : '0',
-        ]);
-    }
+    $user->settings->update(['can_change_name' => $data['allow_change_username'] ? '1' : '0']);
+	}
 
     private function checkUsernameChangedPermission(Model $user, array $data, RconService $rcon): void
     {
@@ -118,14 +130,13 @@ class EditUser extends EditRecord
     private function treatChangedCurrencies(Model $user, array $data, RconService $rcon): void
     {
         $user->currencies->each(function (UserCurrency $currency) use ($data, $user, $rcon) {
-            $updatedCurrencyAmount = collect($data)
-                ->get("currency_{$currency->type}", $currency->amount);
+            $updatedCurrencyAmount = $data["currency_{$currency->type}"] ?? $currency->amount;
 
             if ($updatedCurrencyAmount == $currency->amount) return;
 
             $rcon->sendSafelyFromDashboard('giveCurrency',
                 [$user, $currency->type, -$currency->amount + $updatedCurrencyAmount],
-                "RCON: Failed to send a currency",
+                "RCON: Failed to send a currency"
             );
         });
     }
@@ -138,7 +149,7 @@ class EditUser extends EditRecord
         if ($user->online) {
             $rcon->sendSafelyFromDashboard('alertUser',
                 [$user, 'Your rank has been changed. Please, re-enter.'],
-                "RCON: Failed to send a user alert",
+                "RCON: Failed to send a user alert"
             );
 
             sleep(2);
