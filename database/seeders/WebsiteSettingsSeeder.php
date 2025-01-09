@@ -108,13 +108,33 @@ class WebsiteSettingsSeeder extends Seeder
             [
                 'key' => 'badges_path',
                 'value' => '/client/flash/c_images/album1584',
-                'comment' => 'The path to the badges folder',
+                'comment' => 'The path to the badges folder, for the frontend',
+            ],
+			[
+                'key' => 'badge_path_filesystem',
+                'value' => '/var/www/gamedata/c_images/album1584',
+                'comment' => 'The path to the badges folder, for the backend',
             ],
             [
                 'key' => 'group_badge_path',
                 'value' => '/client/flash/c_images/Badgeparts/generated',
                 'comment' => 'The path that contains all the generated group badges',
             ],
+			[
+                'key' => 'ads_path_filesystem',
+                'value' => '/var/www/gamedata/custom',
+                'comment' => 'The path for loading ADS from disk - for the Backend',
+            ],	
+			[
+                'key' => 'ads_picture_path',
+                'value' => '/gamedata/custom',
+                'comment' => 'The path for loading ADS from the CMS - for the Frontend',
+            ],	
+			[
+                'key' => 'nitro_external_texts_file',
+                'value' => '/var/www/gamedata/config/ExternalTexts.json',
+                'comment' => 'The path for loading ExternalTexts',
+            ],			
             [
                 'key' => 'maintenance_enabled',
                 'value' => '0',
