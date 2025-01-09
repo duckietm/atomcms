@@ -7,6 +7,7 @@ use Filament\Forms;
 use Filament\Tables;
 use Illuminate\Support\Facades\Storage;
 use App\Filament\Resources\Hotel\BadgeUploadResource\Pages;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class BadgeUploadResource extends Resource
 {
@@ -22,7 +23,12 @@ class BadgeUploadResource extends Resource
                     ->label('Upload Badge')
                     ->disk('local')
                     ->directory(env('BadgePath', 'badges'))
-                    ->required(),
+                    ->required()
+                    ->getUploadedFileNameForStorageUsing(
+                        function (TemporaryUploadedFile $file): string {
+                            return strtolower(str_replace([' ', '-', 'æ', 'ø', 'å'], ['_', '_', 'ae', 'oe', 'aa'], $file->getClientOriginalName()));
+                        }
+                    ),
             ]);
     }
 
