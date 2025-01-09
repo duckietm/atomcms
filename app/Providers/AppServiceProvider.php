@@ -9,6 +9,7 @@ use App\Services\SettingsService;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -54,5 +55,12 @@ class AppServiceProvider extends ServiceProvider
 		Table::configureUsing(function (Table $table) {
 			$table->paginated([10, 25, 50]);
 		});
+		
+		$settingsService = app(SettingsService::class);
+		$badgePath = $settingsService->getOrDefault('badge_path_filesystem', '/var/www/gamedata/c_images/album1584');
+		Config::set('filesystems.disks.badges.root', $badgePath);
+		
+		$adsPath = $settingsService->getOrDefault('ads_path_filesystem', '/var/www/gamedata/custom');
+		Config::set('filesystems.disks.ads.root', $adsPath);
     }
 }
