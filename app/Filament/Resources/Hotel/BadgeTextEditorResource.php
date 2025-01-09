@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 namespace App\Filament\Resources\Hotel;
 
 use App\Filament\Resources\Hotel\BadgeTextEditorResource\Pages;
-use App\Models\WebsiteBadgedata;
+use App\Models\WebsiteBadge;
 use App\Services\SettingsService;
 use Filament\Forms;
 use Filament\Resources\Resource;
@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class BadgeTextEditorResource extends Resource
 {
-    protected static ?string $model = WebsiteBadgedata::class;
+    protected static ?string $model = WebsiteBadge::class;
 
     protected static ?string $navigationGroup = 'Hotel';
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';

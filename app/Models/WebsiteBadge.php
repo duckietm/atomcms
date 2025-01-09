@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WebsiteBadgedata extends Model
+class WebsiteBadge extends Model
 {
     use HasFactory;
-
-    protected $table = 'website_badgedata';
 
     protected $fillable = [
         'badge_key',
