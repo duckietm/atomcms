@@ -9,10 +9,7 @@ use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\DeleteAction;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class BadgeTextEditorResource extends Resource
 {
@@ -66,6 +63,7 @@ class BadgeTextEditorResource extends Resource
                     ->sortable(),
                 TextColumn::make('badge_description')
                     ->label('Badge Description')
+                    ->getStateUsing(fn ($record) => Str::limit($record->badge_description, 65))
                     ->searchable(),
             ])
             ->filters([])
