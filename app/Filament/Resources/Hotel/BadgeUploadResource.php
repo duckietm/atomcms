@@ -22,7 +22,7 @@ class BadgeUploadResource extends Resource
                 Forms\Components\FileUpload::make('badge_file')
                     ->label('Upload Badge')
                     ->disk('local')
-                    ->directory(env('BadgePath', 'badges'))
+                    ->directory(setting('badge_path_filesystem'))
                     ->required()
                     ->getUploadedFileNameForStorageUsing(
                         function (TemporaryUploadedFile $file): string {
