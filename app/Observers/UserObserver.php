@@ -23,8 +23,6 @@ class UserObserver
             ]);
         }
 
-
-
         UserCurrency::insert([
             [
                 'user_id' => $user->id,
