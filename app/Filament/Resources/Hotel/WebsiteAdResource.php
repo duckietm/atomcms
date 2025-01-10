@@ -13,6 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\Layout\Stack;
 use Illuminate\Support\Facades\Artisan;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class WebsiteAdResource extends Resource
 {
@@ -35,6 +36,11 @@ class WebsiteAdResource extends Resource
                     ->validationMessages([
                         'required' => 'Please upload an image.', 'image' => 'The file must be a valid image.', 'mimes' => 'Only JPEG, PNG, JPG, and GIF images are allowed.'])
                     ->required()
+                    ->getUploadedFileNameForStorageUsing(
+                        function (TemporaryUploadedFile $file): string {
+                            return strtolower(str_replace([' ', '-', 'æ', 'ø', 'å'], ['_', '_', 'ae', 'oe', 'aa'], $file->getClientOriginalName()));
+                        }
+                    )
             ]);
     }
 

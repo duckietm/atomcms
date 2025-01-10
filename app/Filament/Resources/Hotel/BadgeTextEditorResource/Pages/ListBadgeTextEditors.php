@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Hotel\BadgeTextEditorResource\Pages;
 
 use App\Filament\Resources\Hotel\BadgeTextEditorResource;
-use App\Models\WebsiteBadgedata;
+use App\Models\WebsiteBadge;
 use App\Services\SettingsService;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -19,7 +19,7 @@ class ListBadgeTextEditors extends ListRecords
         return [
             Actions\CreateAction::make()
                 ->label('Add Badge')
-				->color('info')
+				        ->color('info')
                 ->modalHeading('Add a New Badge')
                 ->modalButton('Create Badge')
                 ->after(function () {
@@ -63,8 +63,7 @@ class ListBadgeTextEditors extends ListRecords
 
         $jsonData = json_decode(file_get_contents($jsonPath), true);
 
-        $badges = WebsiteBadgedata::all();
-
+        $badges = WebsiteBadge::all();
         $badgeKeys = $badges->pluck('badge_key')->toArray();
 
         foreach ($jsonData as $key => $value) {

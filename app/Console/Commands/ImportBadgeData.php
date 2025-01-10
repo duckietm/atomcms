@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\WebsiteBadgedata;
+use App\Models\WebsiteBadge;
 use App\Services\SettingsService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -40,7 +40,7 @@ class ImportBadgeData extends Command
         }
     }
 
-    private function validateJsonFile(?string $jsonPath): bool 
+    private function validateJsonFile(?string $jsonPath): bool
     {
         if (empty($jsonPath)) {
             $this->error('The JSON file path is not configured in the website settings.');
@@ -55,7 +55,7 @@ class ImportBadgeData extends Command
         return true;
     }
 
-    private function processBadgeData(string $jsonPath): void 
+    private function processBadgeData(string $jsonPath): void
     {
         $badgeData = Collection::make(File::json($jsonPath))
             ->filter(fn($value, $key) => str_starts_with($key, self::BADGE_PREFIX))
@@ -67,12 +67,12 @@ class ImportBadgeData extends Command
             ->values();
 
         $badgeData->chunk(self::CHUNK_SIZE)->each(function ($chunk) {
-            WebsiteBadgedata::upsert(
+            WebsiteBadge::upsert(
                 $chunk->toArray(),
                 ['badge_key'],
                 ['badge_name', 'badge_description']
             );
-            
+          
             $this->info("Processed " . $chunk->count() . " badges.");
         });
     }
