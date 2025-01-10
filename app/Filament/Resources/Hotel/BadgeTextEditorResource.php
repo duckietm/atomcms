@@ -9,16 +9,12 @@ use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\DeleteAction;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 
 class BadgeTextEditorResource extends Resource
 {
-    protected static ?string $model = WebsiteBadgedata::class;
+    protected static ?string $model = WebsiteBadge::class;
 
     protected static ?string $navigationGroup = 'Hotel';
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
@@ -51,7 +47,7 @@ class BadgeTextEditorResource extends Resource
         $badgesPath = $settingsService->getOrDefault('badges_path', '/gamedata/c_images/album1584/');
 
         return $table
-            ->columns([                
+            ->columns([
                 Tables\Columns\ImageColumn::make('badge_key')
                     ->label('Badge Image')
                     ->getStateUsing(function ($record) use ($badgesPath) {
