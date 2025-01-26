@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/prod/Dockerfile
+    volumes:
+      - ./storage:/app/storage
+      - ./docker/prod/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      FRANKENPHP_CONFIG: "worker ./public/index.php"
+      PHP_MEMORY_LIMIT: "256M"
+      PHP_UPLOAD_MAX_FILESIZE: "42M"
+      PHP_POST_MAX_SIZE: "42M"
+    depends_on:
+      - redis
+      - mariadb
+    restart: unless-stopped
+    networks:
+      - app_network
+
+  redis:
+    image: 'redis:alpine'
+    volumes:
+      - 'redis_data:/data'
+    networks:
+      - app_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  mariadb:
+    image: 'mariadb:10'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - 'mariadb_data:/var/lib/mysql'
+    networks:
+      - app_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
+  mariadb_data:
+    driver: local
