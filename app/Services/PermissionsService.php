@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Miscellaneous\WebsitePermission;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class PermissionsService
 {
@@ -11,7 +12,11 @@ class PermissionsService
 
     public function __construct()
     {
-        $this->permissions = WebsitePermission::all()->pluck('min_rank', 'permission');
+        Cache::remember('website_permissions', now()->addMinutes(30), function () {
+            return WebsitePermission::all()->pluck('min_rank', 'permission');
+        });
+
+        $this->permissions = Cache::get('website_permissions');
     }
 
     public function getOrDefault(string $permissionName, bool $default = false): bool
