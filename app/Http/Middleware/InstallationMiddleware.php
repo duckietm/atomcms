@@ -8,6 +8,7 @@ use Closure;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -16,11 +17,18 @@ class InstallationMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        if (Cache::get('app_installed')) {
+            return $next($request);
+        }
         $this->ensureInstallationTableExists();
 
         $installation = $this->getInstallation();
 
         if ($installation && $installation->completed && $request->is('installation*')) {
+            Cache::rememberForever('app_installed', function () {
+                return true;
+            });
+
             return to_route('welcome');
         }
 

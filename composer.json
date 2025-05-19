@@ -4,46 +4,42 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
-	"repositories": {
-        "rmsramos/activitylog": {
+    "repositories": [
+        {
             "type": "vcs",
-            "url": "https://github.com/duckietm/activitylog.git"
+            "url": "https://github.com/ObjectRetros/activitylog"
         }
-    },
+    ],
     "require": {
         "php": "^8.1",
         "ext-sockets": "*",
         "doctrine/dbal": "^3.5",
         "filament/filament": "^3.2",
         "filipfonal/filament-log-manager": "^2.0",
-        "flowframe/laravel-trend": "^0.3.0",
+        "flowframe/laravel-trend": "^0.4.0",
         "guzzlehttp/guzzle": "^7.2",
-        "illuminate/support": "^11.0",
+        "itsgoingd/clockwork": "*",
         "jenssegers/agent": "^2.6",
         "laravel/fortify": "^1.16",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
-		"opcodesio/log-viewer": "*",
+        "objectretros/activitylog": "dev-main",
+        "opcodesio/log-viewer": "*",
         "qirolab/laravel-themer": "^2.0",
-        "rmsramos/activitylog": "^1.0",
         "ryangjchandler/laravel-cloudflare-turnstile": "*",
-        "saade/filament-laravel-log": "^3.2",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-sluggable": "^3.7",
         "srmklive/paypal": "~3.0",
         "stevebauman/purify": "^6.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "v3.12",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^v1.14",
-        "laravel/sail": "^1.29",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.1",
-        "pestphp/pest": "^2.19.2",
-        "pestphp/pest-plugin-laravel": "^2.2",
-        "phpunit/phpunit": "^10.3.5",
+        "pestphp/pest": "^3.0",
+        "phpunit/phpunit": "^11.0",
         "spatie/laravel-ignition": "^2.0",
         "spatie/laravel-ray": "^1.32"
     },

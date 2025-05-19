@@ -124,17 +124,17 @@ class WebsiteSettingsSeeder extends Seeder
                 'key' => 'ads_path_filesystem',
                 'value' => '/var/www/gamedata/custom',
                 'comment' => 'The path for loading ADS from disk - for the Backend',
-            ],	
+            ],
 			[
                 'key' => 'ads_picture_path',
                 'value' => '/gamedata/custom',
                 'comment' => 'The path for loading ADS from the CMS - for the Frontend',
-            ],	
+            ],
 			[
                 'key' => 'nitro_external_texts_file',
                 'value' => '/var/www/gamedata/config/ExternalTexts.json',
                 'comment' => 'The path for loading ExternalTexts',
-            ],			
+            ],
             [
                 'key' => 'maintenance_enabled',
                 'value' => '0',
@@ -259,16 +259,6 @@ class WebsiteSettingsSeeder extends Seeder
                 'key' => 'furniture_icons_path',
                 'value' => '/client/flash/dcr/hof_furni/icons',
                 'comment' => 'The path used to display furniture icons - eg. on rare values',
-            ],
-            [
-                'key' => 'enable_caching',
-                'value' => '0',
-                'comment' => 'Determines whether the cache is enabled or not',
-            ],
-            [
-                'key' => 'cache_timer',
-                'value' => '30',
-                'comment' => 'Determines how many minutes the cache will last before being refreshed ',
             ],
             [
                 'key' => 'nitro_path',

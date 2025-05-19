@@ -9,6 +9,7 @@ use App\Models\Miscellaneous\WebsiteSetting;
 use App\Rules\ValidateInstallationKeyRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -78,6 +79,10 @@ class InstallationController extends Controller
         WebsiteInstallation::latest()->first()->update([
             'completed' => true,
         ]);
+
+        if (Cache::get('website_permissions')) {
+            Cache::forget('website_permissions');
+        }
 
         return to_route('welcome');
     }
