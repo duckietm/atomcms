@@ -15,7 +15,7 @@ Please note that Atom CMS is provided as an educational resource for learning pu
 The creation of Atom CMS was driven by the desire to widen the options available for people when choosing a CMS for their new journey. By valuing community input and collaboration, Atom aims to offer a modern and user-friendly system that is easy to understand and work with. Additionally, Atom CMS includes a built-in theme system allowing you the flexibility to use any CSS framework you prefer or even opt for a fully customized vanilla approach. This enables you to tailor the platform to your specific needs and preferences, ensuring a truly unique user experience.
 
 Check out the fantastic trio that brings it all together:
-- **PHP (Laravel 11.x)**: At the core of Atom CMS lies Laravel 11.x, a modern and elegant PHP framework that simplifies the development process. Laravel's extensive documentation can be found [here](https://laravel.com/docs/11.x).
+- **PHP (Laravel 12.x)**: At the core of Atom CMS lies Laravel 12.x, a modern and elegant PHP framework that simplifies the development process. Laravel's extensive documentation can be found [here](https://laravel.com/docs/11.x).
 - **Vite**: As a next-generation frontend build tool, Vite empowers Atom CMS with lightning-fast development and production speeds. Dive into the Vite documentation [here](https://vitejs.dev/) to explore its full potential.
 - **TailwindCSS**: To ensure a visually stunning and responsive design, Atom CMS incorporates TailwindCSS, a utility-first CSS framework. Learn more about TailwindCSS and its installation process from the official [docs](https://tailwindcss.com/docs/installation)
 
@@ -25,7 +25,6 @@ We appreciate any type of contribution towards Atom CMS, how ever to maintain a 
 ### 🧙‍♂️ Learning Laravel
 If you are new to Laravel and want to build your own features, we highly recommend the following free resources:
 
-- Laravel Bootcamp: [https://bootcamp.laravel.com/](https://bootcamp.laravel.com/)
 - Laravel 11 from Scratch: [https://laracasts.com/series/30-days-to-learn-laravel-11](https://laracasts.com/series/30-days-to-learn-laravel-11)
 
 Laracasts is considered an official learning platform for Laravel, so you can trust the quality of the content and learn best practices from some of the best and most experienced teacher within the field.
@@ -53,6 +52,7 @@ extension=mbstring
 extension=openssl
 extension=pdo_mysql
 extension=sockets
+extension=intl
 ```
 
 ## Setup guide
