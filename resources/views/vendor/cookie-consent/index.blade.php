@@ -2,7 +2,7 @@
     <div class="cookie-consent-overlay">
         <div class="cookie-consent-modal js-cookie-consent">
             <div class="cookie-consent-content">
-                <h2 class="cookie-consent-title">We Use Cookies</h2>
+                <h2 class="cookie-consent-title">{{ __(':hotel', ['hotel' => setting('hotel_name')]) }} {{ trans('cookie-consent::texts.intro') }}</h2>
                 <p class="cookie-consent-message">
                     {{ trans('cookie-consent::texts.message') }}
                 </p>
@@ -30,13 +30,13 @@
         }
 
         .cookie-consent-modal {
-            background: #1e3a8a; /* Dark blue background */
+            background: #FFFFFF;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             max-width: 500px;
             width: 90%;
             padding: 20px;
-            color: #ffffff;
+            color: #000000;
         }
 
         .cookie-consent-content {
@@ -59,7 +59,7 @@
         }
 
         .cookie-consent-button {
-            background: #facc15; /* Yellow for contrast */
+            background: #007aff;
             color: #1e3a8a;
             padding: 10px 20px;
             border: none;
@@ -67,6 +67,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
+			color: #FFFFFF;
         }
 
         .cookie-consent-button:hover {
@@ -120,13 +121,11 @@
                     document.body.classList.remove('cookie-consent-active');
                     console.log('Consent processed, initiating fade-out and reload');
 
-                    // Apply fade-out animation
                     document.body.classList.add('fade-out');
-                    // Wait for animation to complete before reloading
                     setTimeout(() => {
                         console.log('Fade-out complete, refreshing page');
                         window.location.reload();
-                    }, 500); // Match animation duration (0.5s)
+                    }, 500);
                 } catch (error) {
                     console.error('Error in consentWithCookies:', error);
                 }
