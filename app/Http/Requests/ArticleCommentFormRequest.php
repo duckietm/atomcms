@@ -4,9 +4,17 @@ namespace App\Http\Requests;
 
 use App\Rules\WebsiteWordfilterRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class ArticleCommentFormRequest extends FormRequest
 {
+    public function authorize(): bool
+    {
+        return auth()->check(); // Ensure the user is authenticated
+    }
+
     public function rules(): array
     {
         return [
@@ -14,8 +22,11 @@ class ArticleCommentFormRequest extends FormRequest
         ];
     }
 
-    public function authorize(): bool
+    protected function failedValidation(Validator $validator)
     {
-        return true;
+        throw new ValidationException(
+            $validator,
+            redirect()->route('article.show', $this->route('article'))->withErrors($validator)->withInput()
+        );
     }
 }
