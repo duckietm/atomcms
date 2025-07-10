@@ -38,27 +38,21 @@ class WebsiteRareValuesController extends Controller
 
         return view('rare-values', [
             'categories' => $category,
-            'categoriesNav' =>  $this->valueCategoriesService->fetchAllCategories(),
+            'categoriesNav' => $this->valueCategoriesService->fetchAllCategories(),
         ]);
     }
 
     public function search(RareSearchFormRequest $request): View|RedirectResponse
-    {
-        $searchTerm = $request->input('search');
-
-        $categories = $this->valueCategoriesService->searchCategories($searchTerm);
-
-        if ($categories->isEmpty()) {
-            return redirect()->back()->withErrors([
-                'message' => __('It seems like there were no rares matching your search input'),
-            ]);
-        }
-
-        return view('rare-values', [
-            'categories' => $categories,
-            'categoriesNav' => WebsiteRareValueCategory::has('furniture')->get(),
-        ]);
-    }
+	{
+		$searchTerm = $request->input('search');
+		$categories = $this->valueCategoriesService->searchCategories($searchTerm);
+		
+		return view('rare-values', [
+			'categories' => $categories,
+			'categoriesNav' => WebsiteRareValueCategory::has('furniture')->get(),
+			'searchTerm' => $searchTerm
+		]);
+	}
 
     public function value(WebsiteRareValue $value): View
     {
