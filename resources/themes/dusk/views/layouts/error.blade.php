@@ -105,8 +105,6 @@
     <div class="site-bg"></div>
     <div class="header">@yield('header_content')</div>
     @yield('content')
-    <footer>
-        © {{ date('Y') }} {{ setting('hotel_name') }} is a not for profit educational project & is in no way affiliated with Sulake Corporation Oy.
-    </footer>
+    <footer>{{ __(':hotel is a not for profit educational project', ['hotel' => setting('hotel_name')]) }} Â©{{ date('Y') }}</footer>
 </body>
 </html>
