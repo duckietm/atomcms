@@ -77,11 +77,12 @@
         </div>
 
         <div class="absolute bottom-0 right-0 hidden lg:block z-0">
-            <img src="https://i.imgur.com/2o0Oyvu.png" alt="">
+            <img src="/assets/images/maintenance/fireman.png" alt="">
         </div>
     </div>
 
     <div class="px-4 lg:px-14 text-gray-100 h-full flex flex-col justify-center relative z-10">
+	
         <h2 class="text-4xl lg:text-5xl font-bold uppercase">Maintenance break!</h2>
 
         <article class="mt-4 text-lg lg:text-xl max-w-[600px] text-wrap">
@@ -90,7 +91,7 @@
     </div>
 </div>
 
-<img class="absolute bottom-0 right-0 opacity-60 hidden lg:block z-0" src="https://i.imgur.com/Km5s9pT.png" alt="">
+<img class="absolute bottom-0 right-0 opacity-60 hidden lg:block z-0" src="/assets/images/maintenance/hotelview.png" alt="">
 
 @guest
     <div class="absolute top-6 right-6 z-50">
@@ -107,5 +108,7 @@
     </div>
 @endguest
 </body>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
 
 </html>
