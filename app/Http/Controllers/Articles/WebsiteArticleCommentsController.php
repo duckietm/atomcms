@@ -19,6 +19,7 @@ class WebsiteArticleCommentsController extends Controller
     {
         try {
             $this->commentService->store($request->input('comment'), $article);
+            
             return redirect()->route('article.show', $article->slug)->with('success', __('Your comment has been posted!'));
         } catch (\Throwable $e) {
             Log::error('Failed to post comment', [
