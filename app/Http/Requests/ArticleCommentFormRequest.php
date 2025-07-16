@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class ArticleCommentFormRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return auth()->check(); // Ensure the user is authenticated
-    }
-
     public function rules(): array
     {
         return [

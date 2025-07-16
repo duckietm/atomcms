@@ -14,13 +14,13 @@ class ShopVoucherController extends Controller
         $voucher = WebsiteShopVoucher::where('code', $request->string('code'))->first();
 
         if (is_null($voucher) || ($voucher->expires_at && $voucher->expires_at->lte(now()))) {
-            return redirect()->route('shop.index')->withErrors([
+            return redirect()->back()->withErrors([
                 'message' => __('No active voucher with the given code was found'),
             ]);
         }
 
         if ($user->usedShopVouchers()->where('voucher_id', $voucher->id)->exists()) {
-            return redirect()->route('shop.index')->withErrors([
+            return redirect()->back()->withErrors([
                 'message' => __('You can only use each shop voucher once'),
             ]);
         }
@@ -39,6 +39,6 @@ class ShopVoucherController extends Controller
             ]);
         }
 
-        return redirect()->route('shop.index')->with('success', __('Your balance has been increased by $:amount', ['amount' => $voucher->amount]));
+        return redirect()->back()->with('success', __('Your balance has been increased by $:amount', ['amount' => $voucher->amount]));
     }
 }

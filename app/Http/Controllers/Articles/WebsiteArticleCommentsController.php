@@ -35,6 +35,6 @@ class WebsiteArticleCommentsController extends Controller
     public function destroy(WebsiteArticleComment $comment): RedirectResponse
     {
         $this->commentService->destroy($comment);
-        return redirect()->route('article.show', $comment->article->slug)->with('success', __('Your comment has been deleted!'));
+        return redirect()->back()->with('success', __('You comment has been deleted!'));
     }
 }
