@@ -13,9 +13,13 @@
     Oh bobba! Server error.
 @endsection
 @section('content')
+    @if (config('app.debug'))
     <div class="text">
         <div class="debug">
             <pre>Error: {{ $exception->getMessage() }}</pre>
         </div>
     </div>
+    @else
+    <div class="text">We're experiencing some technical difficulties. Please try again later.</div>
+    @endif
 @endsection

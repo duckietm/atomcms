@@ -37,20 +37,6 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    public function render($request, Throwable $exception)
-    {
-        if ($this->isHttpException($exception)) {
-            $status = $exception->getStatusCode();
-            $view = "errors.{$status}";
-
-            if (View::exists($view)) {
-                return response()->view($view, ['exception' => $exception], $status);
-            }
-        }
-
-        return parent::render($request, $exception);
-    }
-
     /**
      * Register the exception handling callbacks for the application.
      */
