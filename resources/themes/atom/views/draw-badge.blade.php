@@ -102,6 +102,7 @@
                     <div class="mt-4 md:mt-10 flex flex-col md:flex-row gap-4 justify-between">
                         <button type="button" @click="clearBoard" class="w-full rounded bg-red-600 hover:bg-red-700 text-white p-2 border-2 border-red-500 transition ease-in-out duration-150 font-semibold">Clear All</button>
                         <button type="button" @click="generateCanvas('download')" class="w-full rounded bg-[#eeb425] text-white p-2 border-2 border-yellow-400 transition ease-in-out duration-200 hover:bg-[#d49f1c] font-semibold"> {{ __('Download badge') }} </button>
+                        <button type="button" @click="buyBadge" class="w-full rounded bg-green-600 hover:bg-green-700 text-white p-2 border-2 border-green-500 transition ease-in-out duration-150 font-semibold"> {{ __('Buy Badge (150 Credits)') }} </button>
                     </div>
                 </div>
             </div>
@@ -426,6 +427,32 @@
                     });
 
                     gif.render();
+                },
+
+                buyBadge() {
+                    if (!confirm('{{ __('Are you sure you want to buy this badge for 150 credits?') }}')) return;
+
+                    fetch('{{ route('badge.buy') }}', {  // Assuming a route named 'badge.buy' for the POST endpoint
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({})  // For now, empty body; later, add badge data for saving
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('{{ __('Badge purchased successfully! Credits deducted.') }}');
+                            // Optionally, refresh user credits display if available, or proceed to next steps
+                        } else {
+                            alert(data.message || '{{ __('Error: Insufficient credits or purchase failed.') }}');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('{{ __('An error occurred during the purchase.') }}');
+                    });
                 }
             }
         }
