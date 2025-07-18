@@ -13,41 +13,85 @@
 
             <div class="px-2 text-sm dark:text-gray-200">
                 <div x-data="badgeDrawer()" class="mt-4">
-                    <div class="flex gap-8 items-start">
-                        <div class="checkerboard" style="position: relative; width: 640px; height: 640px;">
-                            <div id="guide" x-ref="guide"></div>
-                            <canvas width="40" height="40" x-ref="canvas" style="width: 100%; height: 100%; border: 1px solid #ccc; image-rendering: pixelated; background: transparent;"></canvas>
+                    <div class="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+                        <div class="checkerboard w-full max-w-[640px] aspect-square relative">
+                            <div id="guide" x-ref="guide" class="border border-gray-700 dark:border-white"></div>
+                            <canvas width="40" height="40" x-ref="canvas" class="w-full h-full border border-gray-300 dark:border-gray-700" style="image-rendering: pixelated; background: transparent;"></canvas>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col w-full md:w-auto">
                             <h3 class="font-bold mb-2">Preview</h3>
-                            <div class="checkerboard" style="width: 40px; height: 40px;">
-                                <canvas width="40" height="40" x-ref="previewCanvas" style="border: 1px solid #ccc; image-rendering: pixelated; background: transparent;"></canvas>
+                            <div class="checkerboard w-10 h-10 md:w-[40px] md:h-[40px]">
+                                <canvas width="40" height="40" x-ref="previewCanvas" class="border border-gray-300 dark:border-gray-700" style="image-rendering: pixelated; background: transparent;"></canvas>
                             </div>
-                            <div class="flex gap-4 mt-4 items-center">
+                            <div class="flex flex-wrap gap-4 mt-4 items-center">
                                 <div>
                                     <label>Choose Color</label>
-                                    <div @click="$refs.colorInput.click()" class="w-16 h-16 cursor-pointer flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="grey" stroke-width="1" viewBox="0 0 16 16">
-                                            <path d="M6.192 2.78c-.458-.677-.927-1.248-1.35-1.643a3 3 0 0 0-.71-.515c-.217-.104-.56-.205-.882-.02-.367.213-.427.63-.43.896-.003.304.064.664.173 1.044.196.687.556 1.528 1.035 2.402L.752 8.22c-.277.277-.269.656-.218.918.055.283.187.593.36.903.348.627.92 1.361 1.626 2.068.707.707 1.441 1.278 2.068 1.626.31.173.62.305.903.36.262.05.64.059.918-.218l5.615-5.615c.118.257.092.512.05.939-.03.292-.068.665-.073 1.176v.123h.003a1 1 0 0 0 1.993 0H14v-.057a1 1 0 0 0-.004-.117c-.055-1.25-.7-2.738-1.86-3.494a4 4 0 0 0-.211-.434c-.349-.626-.92-1.36-1.627-2.067S8.857 3.052 8.23 2.704c-.31-.172-.62-.304-.903-.36-.262-.05-.64-.058-.918.219zM4.16 1.867c.381.356.844.922 1.311 1.632l-.704.705c-.382-.727-.66-1.402-.813-1.938a3.3 3.3 0 0 1-.131-.673q.137.09.337.274m.394 3.965c.54.852 1.107 1.567 1.607 2.033a.5.5 0 1 0 .682-.732c-.453-.422-1.017-1.136-1.564-2.027l1.088-1.088q.081.181.183.365c.349.627.92 1.361 1.627 2.068.706.707 1.44 1.278 2.068 1.626q.183.103.365.183l-4.861 4.862-.068-.01c-.137-.027-.342-.104-.608-.252-.524-.292-1.186-.8-1.846-1.46s-1.168-1.32-1.46-1.846c-.147-.265-.225-.47-.251-.607l-.01-.068zm2.87-1.935a2.4 2.4 0 0 1-.241-.561c.135.033.324.11.562.241.524.292 1.186.8 1.846 1.46.45.45.83.901 1.118 1.31a3.5 3.5 0 0 0-1.066.091 11 11 0 0 1-.76-.694c-.66-.66-1.167-1.322-1.458-1.847z"/>
+                                    <div @click="$refs.colorInput.click()" class="w-16 h-16 cursor-pointer flex items-center justify-center relative">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-[1.8rem] h-[1.8rem]" fill="none" stroke="black" stroke-width="1" viewBox="0 0 20 20">
+                                            <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
+                                            <g transform="translate(2,2)">
+                                                <path d="M6.192 2.78c-.458-.677-.927-1.248-1.35-1.643a3 3 0 0 0-.71-.515c-.217-.104-.56-.205-.882-.02-.367.213-.427.63-.43.896-.003.304.064.664.173 1.044.196.687.556 1.528 1.035 2.402L.752 8.22c-.277.277-.269.656-.218.918.055.283.187.593.36.903.348.627.92 1.361 1.626 2.068.707.707 1.441 1.278 2.068 1.626.31.173.62.305.903.36.262.05.64.059.918-.218l5.615-5.615c.118.257.092.512.05.939-.03.292-.068.665-.073 1.176v.123h.003a1 1 0 0 0 1.993 0H14v-.057a1 1 0 0 0-.004-.117c-.055-1.25-.7-2.738-1.86-3.494a4 4 0 0 0-.211-.434c-.349-.626-.92-1.36-1.627-2.067S8.857 3.052 8.23 2.704c-.31-.172-.62-.304-.903-.36-.262-.05-.64-.058-.918.219zM4.16 1.867c.381.356.844.922 1.311 1.632l-.704.705c-.382-.727-.66-1.402-.813-1.938a3.3 3.3 0 0 1-.131-.673q.137.09.337.274m.394 3.965c.54.852 1.107 1.567 1.607 2.033a.5.5 0 1 0 .682-.732c-.453-.422-1.017-1.136-1.564-2.027l1.088-1.088q.081.181.183.365c.349.627.92 1.361 1.627 2.068.706.707 1.44 1.278 2.068 1.626q.183.103.365.183l-4.861 4.862-.068-.01c-.137-.027-.342-.104-.608-.252-.524-.292-1.186-.8-1.846-1.46s-1.168-1.32-1.46-1.846c-.147-.265-.225-.47-.251-.607l-.01-.068zm2.87-1.935a2.4 2.4 0 0 1-.241-.561c.135.033.324.11.562.241.524.292 1.186.8 1.846 1.46.45.45.83.901 1.118 1.31a3.5 3.5 0 0 0-1.066.091 11 11 0 0 1-.76-.694c-.66-.66-1.167-1.322-1.458-1.847z"/>
+                                            </g>
                                         </svg>
+                                        <input type="color" id="colorInput" x-ref="colorInput" x-model="color" class="absolute opacity-0 w-full h-full cursor-pointer top-0 left-0" @input="color = $event.target.value" >
                                     </div>
-                                    <input type="color" id="colorInput" x-ref="colorInput" x-model="color" style="display: none;">
                                 </div>
                                 <div>
-                                    <div :style="'background-color: ' + color" class="w-16 h-16 border border-gray-300"></div>
+                                    <div :style="'background-color: ' + color" class="w-16 h-16 border border-gray-300 dark:border-gray-700"></div>
                                 </div>
                                 <div>
                                     <h4 class="font-bold mb-1">Palette</h4>
                                     <div class="grid grid-cols-6 gap-1">
                                         <template x-for="col in colors">
-                                            <div @click="color = col; eraseMode = false" :style="'background-color: ' + col" class="w-6 h-6 cursor-pointer border border-gray-300"></div>
+                                            <div @click="color = col; eraseMode = false" :style="'background-color: ' + col" class="w-6 h-6 cursor-pointer border border-gray-300 dark:border-gray-700"></div>
                                         </template>
                                     </div>
                                 </div>
                             </div>
                             <div class="mt-2">
-                                <label for="eraseToggle">Erase Mode: </label>
-                                <input type="checkbox" id="eraseToggle" x-model="eraseMode">
+                                <h4 class="font-bold mb-1">Recent</h4>
+                                <div class="flex flex-row gap-[2px] overflow-x-auto">
+                                    <template x-for="col in recentColors" :key="col">
+                                        <div @click="color = col; eraseMode = false" :style="'background-color: ' + col" class="w-6 h-6 cursor-pointer border border-gray-300 dark:border-gray-700 flex-shrink-0"></div>
+                                    </template>
+                                    <template x-for="i in (12 - recentColors.length)" :key="'empty-' + i">
+                                        <div class="w-6 h-6 border border-gray-300 dark:border-gray-700 bg-transparent flex-shrink-0"></div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <button @click="toggleCopyMode" class="flex items-center cursor-pointer">
+                                    Copy Color:
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" fill="none" :stroke="copyMode ? 'red' : 'black'" stroke-width="1" viewBox="0 0 20 20">
+                                        <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
+                                        <g transform="translate(2,2)">
+                                            <path d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.147 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.853a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708zM2 12.707l7-7L10.293 7l-7 7H2z"/>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <button @click="toggleEraseMode" class="flex items-center cursor-pointer">
+                                    Erase Mode:
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" :fill="eraseMode ? 'red' : 'black'" viewBox="0 0 20 20" stroke-width="0">
+                                        <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
+                                        <g transform="translate(2,2)">
+                                            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l3.879-3.879a2 2 0 0 1 2.828 0zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414L10.207 2.914zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <button @click="$refs.fileInput.click()" class="flex items-center cursor-pointer">
+                                    Import Picture:
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" fill="none" stroke="black" stroke-width="1.5" viewBox="0 0 30 30">
+                                        <circle cx="15" cy="15" r="15" fill="white" stroke="none"/>
+                                        <g transform="translate(3,3)">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
+                                        </g>
+                                    </svg>
+                                </button>
+                                <input type="file" accept="image/png,image/gif" x-ref="fileInput" style="display:none;" @change="importImage($event)">
                             </div>
                             <div class="mt-2">
                                 <label for="toggleGuide">Show Grid: </label>
@@ -55,7 +99,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="margin-top: 10px;" class="flex gap-4 justify-between">
+                    <div class="mt-4 md:mt-10 flex flex-col md:flex-row gap-4 justify-between">
                         <button type="button" @click="clearBoard" class="w-full rounded bg-red-600 hover:bg-red-700 text-white p-2 border-2 border-red-500 transition ease-in-out duration-150 font-semibold">Clear All</button>
                         <button type="button" @click="generateCanvas('download')" class="w-full rounded bg-[#eeb425] text-white p-2 border-2 border-yellow-400 transition ease-in-out duration-200 hover:bg-[#d49f1c] font-semibold"> {{ __('Download badge') }} </button>
                     </div>
@@ -64,11 +108,15 @@
         </x-content.content-card>
     </div>
 
+    <script src="{{ asset('js/gif/gif.js') }}"></script>
+
     <script>
         function badgeDrawer() {
             return {
                 color: '#000000',
+                recentColors: [],
                 eraseMode: false,
+                copyMode: false,
                 showGrid: true,
                 isDrawing: false,
                 cellSideCount: 40,
@@ -99,21 +147,63 @@
                     this.guide.style.height = `${this.canvas.clientHeight}px`;
                     this.guide.style.gridTemplateColumns = `repeat(${this.cellSideCount}, 1fr)`;
                     this.guide.style.gridTemplateRows = `repeat(${this.cellSideCount}, 1fr)`;
-                    [...Array(this.cellSideCount ** 2)].forEach(() => this.guide.insertAdjacentHTML('beforeend', '<div style="border: 1px solid #000;"></div>'));
+                    [...Array(this.cellSideCount ** 2)].forEach(() => this.guide.insertAdjacentHTML('beforeend', '<div class="border border-gray-700 dark:border-white"></div>'));
 
                     // Watch for grid toggle
                     this.$watch('showGrid', (value) => {
                         this.guide.style.display = value ? 'grid' : 'none';
                     });
 
-                    // Add event listeners
+                    // Watch for erase mode
+                    this.$watch('eraseMode', (value) => {
+                        if (value) this.copyMode = false;
+                    });
+
+                    // Watch for copy mode
+                    this.$watch('copyMode', (value) => {
+                        if (value) this.eraseMode = false;
+                    });
+
+                    // Watch for color changes to update recent colors
+                    this.$watch('color', (newColor) => {
+                        // Remove if already in list
+                        this.recentColors = this.recentColors.filter(c => c !== newColor);
+                        // Add to beginning
+                        this.recentColors.unshift(newColor);
+                        // Keep only 12
+                        if (this.recentColors.length > 12) {
+                            this.recentColors = this.recentColors.slice(0, 12);
+                        }
+                    });
+
+                    // Add event listeners for mouse
                     this.canvas.addEventListener('mousedown', this.handleMousedown.bind(this));
                     this.canvas.addEventListener('mousemove', this.handleMousemove.bind(this));
                     this.canvas.addEventListener('mouseup', () => { this.isDrawing = false; });
                     this.canvas.addEventListener('mouseleave', () => { this.isDrawing = false; });
 
+                    // Add event listeners for touch
+                    this.canvas.addEventListener('touchstart', this.handleTouchstart.bind(this));
+                    this.canvas.addEventListener('touchmove', this.handleTouchmove.bind(this));
+                    this.canvas.addEventListener('touchend', () => { this.isDrawing = false; });
+                    this.canvas.addEventListener('touchcancel', () => { this.isDrawing = false; });
+
                     // Initial preview update
                     this.updatePreview();
+                },
+
+                toggleCopyMode() {
+                    this.copyMode = !this.copyMode;
+                    if (this.copyMode) {
+                        this.eraseMode = false;
+                    }
+                },
+
+                toggleEraseMode() {
+                    this.eraseMode = !this.eraseMode;
+                    if (this.eraseMode) {
+                        this.copyMode = false;
+                    }
                 },
 
                 handleMousedown(e) {
@@ -128,7 +218,12 @@
                     const cellY = Math.floor(y);
                     const currentColor = this.colorHistory[`${cellX}_${cellY}`];
 
-                    if (e.ctrlKey) {
+                    if (this.copyMode) {
+                        if (currentColor) {
+                            this.color = currentColor;
+                            this.copyMode = false;
+                        }
+                    } else if (e.ctrlKey) {
                         if (currentColor) {
                             this.color = currentColor;
                         }
@@ -150,6 +245,99 @@
                     const cellY = Math.floor(y);
 
                     this.paintCell(cellX, cellY);
+                },
+
+                handleTouchstart(e) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const canvasBoundingRect = this.canvas.getBoundingClientRect();
+                    const scaleX = this.canvas.width / canvasBoundingRect.width;
+                    const scaleY = this.canvas.height / canvasBoundingRect.height;
+                    const x = (touch.clientX - canvasBoundingRect.left) * scaleX;
+                    const y = (touch.clientY - canvasBoundingRect.top) * scaleY;
+                    const cellX = Math.floor(x);
+                    const cellY = Math.floor(y);
+                    const currentColor = this.colorHistory[`${cellX}_${cellY}`];
+
+                    if (this.copyMode) {
+                        if (currentColor) {
+                            this.color = currentColor;
+                            this.copyMode = false;
+                        }
+                    } else {
+                        this.paintCell(cellX, cellY);
+                        this.isDrawing = true;
+                    }
+                },
+
+                handleTouchmove(e) {
+                    e.preventDefault();
+                    if (!this.isDrawing) return;
+                    const touch = e.touches[0];
+                    const canvasBoundingRect = this.canvas.getBoundingClientRect();
+                    const scaleX = this.canvas.width / canvasBoundingRect.width;
+                    const scaleY = this.canvas.height / canvasBoundingRect.height;
+                    const x = (touch.clientX - canvasBoundingRect.left) * scaleX;
+                    const y = (touch.clientY - canvasBoundingRect.top) * scaleY;
+                    const cellX = Math.floor(x);
+                    const cellY = Math.floor(y);
+
+                    this.paintCell(cellX, cellY);
+                },
+
+                importImage(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    if (!confirm('Import image and overwrite the canvas?')) {
+                        e.target.value = '';
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = this.cellSideCount;
+                            tempCanvas.height = this.cellSideCount;
+                            const tempContext = tempCanvas.getContext('2d');
+                            tempContext.drawImage(img, 0, 0, this.cellSideCount, this.cellSideCount);
+
+                            // Clear the board
+                            this.drawingContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                            this.colorHistory = {};
+
+                            // Draw the resized image
+                            this.drawingContext.drawImage(tempCanvas, 0, 0);
+
+                            // Update colorHistory
+                            const imageData = this.drawingContext.getImageData(0, 0, this.cellSideCount, this.cellSideCount);
+                            for (let y = 0; y < this.cellSideCount; y++) {
+                                for (let x = 0; x < this.cellSideCount; x++) {
+                                    const index = (y * this.cellSideCount + x) * 4;
+                                    const r = imageData.data[index];
+                                    const g = imageData.data[index + 1];
+                                    const b = imageData.data[index + 2];
+                                    const a = imageData.data[index + 3];
+                                    if (a > 0) {
+                                        this.colorHistory[`${x}_${y}`] = this.rgbToHex(r, g, b);
+                                    }
+                                }
+                            }
+
+                            this.updatePreview();
+                        };
+                        img.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                },
+
+                rgbToHex(r, g, b) {
+                    r = Math.round(r);
+                    g = Math.round(g);
+                    b = Math.round(b);
+                    return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1).toUpperCase();
                 },
 
                 paintCell(cellX, cellY) {
@@ -177,17 +365,59 @@
                 },
 
                 generateCanvas(action) {
-                    const dataURL = this.canvas.toDataURL('image/png');
-                    this.downloadAsImage(dataURL);
-                },
+                    // Get image data to find used colors
+                    const imageData = this.drawingContext.getImageData(0, 0, this.canvas.width, this.canvas.height);
+                    let usedColors = new Set();
+                    for (let y = 0; y < this.canvas.height; y++) {
+                        for (let x = 0; x < this.canvas.width; x++) {
+                            const idx = (y * this.canvas.width + x) * 4;
+                            if (imageData.data[idx + 3] > 0) { // Only consider opaque pixels
+                                const r = imageData.data[idx];
+                                const g = imageData.data[idx + 1];
+                                const b = imageData.data[idx + 2];
+                                usedColors.add((r << 16) | (g << 8) | b); // Store as integer for efficiency
+                            }
+                        }
+                    }
 
-                downloadAsImage(dataURL) {
-                    const a = document.createElement('a');
-                    a.href = dataURL;
-                    a.download = 'badge.png';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
+                    // Find an unused color for transparency placeholder, starting from 0xFF00FF
+                    let transColor = 0xFF00FF;
+                    while (usedColors.has(transColor)) {
+                        transColor = (transColor + 1) % 0x1000000; // Increment and wrap around (unlikely to loop much)
+                    }
+                    const transHex = '#' + transColor.toString(16).padStart(6, '0').toUpperCase();
+
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = this.canvas.width;
+                    tempCanvas.height = this.canvas.height;
+                    const tempContext = tempCanvas.getContext('2d');
+                    tempContext.fillStyle = transHex; // Use the dynamic placeholder
+                    tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                    tempContext.drawImage(this.canvas, 0, 0);
+
+                    const gif = new GIF({
+                        workers: 2,
+                        quality: 10,
+                        workerScript: '{{ asset('js/gif/gif.worker.js') }}', // Local worker script
+                        width: this.canvas.width,
+                        height: this.canvas.height,
+                        transparent: transColor // Use the dynamic integer value
+                    });
+
+                    gif.addFrame(tempCanvas);
+
+                    gif.on('finished', (blob) => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'badge.gif';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    });
+
+                    gif.render();
                 }
             }
         }
@@ -203,7 +433,6 @@
             position: absolute;
             top: 0;
             left: 0;
-            border: 1px solid #000;
         }
         .checkerboard {
             background-color: #fff;
@@ -214,6 +443,14 @@
                 linear-gradient(-45deg, transparent 75%, #eee 75%);
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .dark .checkerboard {
+            background-color: #1a1a1a;
+            background-image: 
+                linear-gradient(45deg, #2a2a2a 25%, transparent 25%), 
+                linear-gradient(-45deg, #2a2a2a 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #2a2a2a 75%), 
+                linear-gradient(-45deg, transparent 75%, #2a2a2a 75%);
         }
         input[type="color"] {
             position: absolute;
