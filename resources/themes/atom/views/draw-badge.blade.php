@@ -15,7 +15,7 @@
                 <div x-data="badgeDrawer()" class="mt-4">
                     <div class="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
                         <div class="checkerboard w-full max-w-[640px] aspect-square relative">
-                            <div id="guide" x-ref="guide" class="border border-gray-700 dark:border-white"></div>
+                            <div id="guide" x-ref="guide" class="border-t border-l border-gray-700 dark:border-white"></div>
                             <canvas width="40" height="40" x-ref="canvas" class="w-full h-full border border-gray-300 dark:border-gray-700" style="image-rendering: pixelated; background: transparent;"></canvas>
                         </div>
                         <div class="flex flex-col w-full md:w-auto">
@@ -142,53 +142,61 @@
                     this.drawingContext = this.canvas.getContext('2d');
                     this.previewContext = this.previewCanvas.getContext('2d');
 
+                    // Get actual rendered size of the canvas
+                    const canvasWidth = this.canvas.clientWidth;
+                    const cellSize = canvasWidth / this.cellSideCount;
+
                     // Setup the guide grid
-                    this.guide.style.width = `${this.canvas.clientWidth}px`;
-                    this.guide.style.height = `${this.canvas.clientHeight}px`;
-                    this.guide.style.gridTemplateColumns = `repeat(${this.cellSideCount}, 1fr)`;
-                    this.guide.style.gridTemplateRows = `repeat(${this.cellSideCount}, 1fr)`;
-                    [...Array(this.cellSideCount ** 2)].forEach(() => this.guide.insertAdjacentHTML('beforeend', '<div class="border border-gray-700 dark:border-white"></div>'));
+                    this.guide.style.width = `${canvasWidth}px`;
+                    this.guide.style.height = `${canvasWidth}px`; // Square canvas
+                    this.guide.style.gridTemplateColumns = `repeat(${this.cellSideCount}, ${cellSize}px)`;
+                    this.guide.style.gridTemplateRows = `repeat(${this.cellSideCount}, ${cellSize}px)`;
+
+                    // Clear any existing children
+                    this.guide.innerHTML = '';
+
+                    // Create grid cells
+                    for (let i = 0; i < this.cellSideCount * this.cellSideCount; i++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'border-b border-r border-gray-700 dark:border-white';
+                        this.guide.appendChild(cell);
+                    }
 
                     // Watch for grid toggle
                     this.$watch('showGrid', (value) => {
                         this.guide.style.display = value ? 'grid' : 'none';
                     });
 
-                    // Watch for erase mode
+                    // Watch for erase/copy toggle
                     this.$watch('eraseMode', (value) => {
                         if (value) this.copyMode = false;
                     });
-
-                    // Watch for copy mode
                     this.$watch('copyMode', (value) => {
                         if (value) this.eraseMode = false;
                     });
 
-                    // Watch for color changes to update recent colors
+                    // Update recent colors
                     this.$watch('color', (newColor) => {
-                        // Remove if already in list
                         this.recentColors = this.recentColors.filter(c => c !== newColor);
-                        // Add to beginning
                         this.recentColors.unshift(newColor);
-                        // Keep only 12
                         if (this.recentColors.length > 12) {
                             this.recentColors = this.recentColors.slice(0, 12);
                         }
                     });
 
-                    // Add event listeners for mouse
+                    // Mouse events
                     this.canvas.addEventListener('mousedown', this.handleMousedown.bind(this));
                     this.canvas.addEventListener('mousemove', this.handleMousemove.bind(this));
                     this.canvas.addEventListener('mouseup', () => { this.isDrawing = false; });
                     this.canvas.addEventListener('mouseleave', () => { this.isDrawing = false; });
 
-                    // Add event listeners for touch
+                    // Touch events
                     this.canvas.addEventListener('touchstart', this.handleTouchstart.bind(this));
                     this.canvas.addEventListener('touchmove', this.handleTouchmove.bind(this));
                     this.canvas.addEventListener('touchend', () => { this.isDrawing = false; });
                     this.canvas.addEventListener('touchcancel', () => { this.isDrawing = false; });
 
-                    // Initial preview update
+                    // Initial preview
                     this.updatePreview();
                 },
 
@@ -433,6 +441,9 @@
             position: absolute;
             top: 0;
             left: 0;
+        }
+        #guide > div {
+            box-sizing: border-box;
         }
         .checkerboard {
             background-color: #fff;
