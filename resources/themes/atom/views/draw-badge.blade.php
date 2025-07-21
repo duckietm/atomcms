@@ -1,6 +1,15 @@
 <x-app-layout>
     @push('title', __('Badge Generator'))
 
+    <script>
+    const translations = {
+        buy_confirmation: @json(__('badge_purchase_confirmation', ['cost' => $cost, 'currency' => $currencyType])),
+        purchase_success: @json(__('badge_purchase_success', ['currency' => ucfirst($currencyType)])),
+        purchase_error_insufficient: @json(__('badge_purchase_error_insufficient', ['currency' => $currencyType])),
+        purchase_error_general: @json(__('badge_purchase_error_general'))
+    };
+    </script>
+
     <div class="col-span-12">
         <x-content.content-card icon="hotel-icon" classes="border dark:border-gray-900">
             <x-slot:title>
@@ -448,7 +457,7 @@
                 },
 
                 async buyBadge() {
-                    if (!confirm(`Are you sure you want to buy this badge for ${this.cost} ${this.currencyType}?`)) return;
+                    if (!confirm(translations.buy_confirmation)) return;
 
                     const blob = await this.generateGifBlob();
                     const reader = new FileReader();
@@ -466,14 +475,14 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                alert(`Badge purchased and saved successfully! ${this.currencyType.charAt(0).toUpperCase() + this.currencyType.slice(1)} deducted.`);
+                                alert(translations.purchase_success);
                             } else {
-                                alert(data.message || `Error: Insufficient ${this.currencyType} or purchase failed.`);
+                                alert(data.message || translations.purchase_error_insufficient);
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred during the purchase.');
+                            alert(translations.purchase_error_general);
                         });
                     };
                     reader.readAsDataURL(blob);
