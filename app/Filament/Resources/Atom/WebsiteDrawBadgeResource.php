@@ -13,6 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use App\Filament\Resources\Atom\WebsiteDrawBadgeResource\Pages;
+use Illuminate\Support\Facades\Storage;
 
 class WebsiteDrawBadgeResource extends Resource
 {
@@ -60,10 +61,26 @@ class WebsiteDrawBadgeResource extends Resource
                     ->label(__('Published')),
             ])
             ->actions([
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->before(function (DeleteAction $action, WebsiteDrawBadge $record) {
+                        // Delete the badge file from the filesystem
+                        $badgePath = $record->badge_path;
+                        if ($badgePath && file_exists($badgePath)) {
+                            unlink($badgePath); // Remove the file
+                        }
+                    }),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+                DeleteBulkAction::make()
+                    ->before(function (DeleteBulkAction $action, array $records) {
+                        // Delete badge files for all selected records
+                        foreach ($records as $record) {
+                            $badgePath = $record->badge_path;
+                            if ($badgePath && file_exists($badgePath)) {
+                                unlink($badgePath); // Remove the file
+                            }
+                        }
+                    }),
             ]);
     }
 
