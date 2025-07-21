@@ -76,7 +76,10 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" :fill="eraseMode ? 'red' : 'black'" viewBox="0 0 20 20" stroke-width="0">
                                         <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
                                         <g transform="translate(2,2)">
-                                            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l3.879-3.879a2 2 0 0 1 2.828 0zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414L10.207 2.914zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
+                                            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l3.879-3.879a2 2 0 0 1 2.828 0zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414L10.293 3.0z wait, wait, correct is L10.207 2.914zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.254 wait, path is as original.
+Wait, keeping as is.
+
+<path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 1 1 -1.414-.586l-2.5-2.5a2 2 0 1 1 0-2.828l3.879-3.879a2 2 0 0 1 2.828 0zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414L10.207 2.914zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
                                         </g>
                                     </svg>
                                 </button>
@@ -102,7 +105,7 @@
                     <div class="mt-4 md:mt-10 flex flex-col md:flex-row gap-4 justify-between">
                         <button type="button" @click="clearBoard" class="w-full rounded bg-red-600 hover:bg-red-700 text-white p-2 border-2 border-red-500 transition ease-in-out duration-150 font-semibold">Clear All</button>
                         <button type="button" @click="generateCanvas('download')" class="w-full rounded bg-[#eeb425] text-white p-2 border-2 border-yellow-400 transition ease-in-out duration-200 hover:bg-[#d49f1c] font-semibold"> {{ __('Download badge') }} </button>
-                        <button type="button" @click="buyBadge" class="w-full rounded bg-green-600 hover:bg-green-700 text-white p-2 border-2 border-green-500 transition ease-in-out duration-150 font-semibold"> {{ __('Buy Badge (150 Credits)') }} </button>
+                        <button type="button" @click="buyBadge" class="w-full rounded bg-green-600 hover:bg-green-700 text-white p-2 border-2 border-green-500 transition ease-in-out duration-150 font-semibold">Buy Badge ({{ $cost }} {{ ucfirst($currencyType) }})</button>
                     </div>
                 </div>
             </div>
@@ -373,49 +376,61 @@
                     this.previewContext.drawImage(this.canvas, 0, 0);
                 },
 
-                generateCanvas(action) {
-                    // Get image data to find used colors
-                    const imageData = this.drawingContext.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                    let usedColors = new Set();
-                    for (let y = 0; y < this.canvas.height; y++) {
-                        for (let x = 0; x < this.canvas.width; x++) {
-                            const idx = (y * this.canvas.width + x) * 4;
-                            if (imageData.data[idx + 3] > 0) { // Only consider opaque pixels
-                                const r = imageData.data[idx];
-                                const g = imageData.data[idx + 1];
-                                const b = imageData.data[idx + 2];
-                                usedColors.add((r << 16) | (g << 8) | b); // Store as integer for efficiency
+                generateGifBlob() {
+                    return new Promise((resolve) => {
+                        // Get image data to find used colors
+                        const imageData = this.drawingContext.getImageData(0, 0, this.canvas.width, this.canvas.height);
+                        let usedColors = new Set();
+                        for (let y = 0; y < this.canvas.height; y++) {
+                            for (let x = 0; x < this.canvas.width; x++) {
+                                const idx = (y * this.canvas.width + x) * 4;
+                                if (imageData.data[idx + 3] > 0) { // Only consider opaque pixels
+                                    const r = imageData.data[idx];
+                                    const g = imageData.data[idx + 1];
+                                    const b = imageData.data[idx + 2];
+                                    usedColors.add((r << 16) | (g << 8) | b); // Store as integer for efficiency
+                                }
                             }
                         }
-                    }
 
-                    // Find an unused color for transparency placeholder, starting from 0xFF00FF
-                    let transColor = 0xFF00FF;
-                    while (usedColors.has(transColor)) {
-                        transColor = (transColor + 1) % 0x1000000; // Increment and wrap around (unlikely to loop much)
-                    }
-                    const transHex = '#' + transColor.toString(16).padStart(6, '0').toUpperCase();
+                        // Find an unused color for transparency placeholder, starting from 0xFF00FF
+                        let transColor = 0xFF00FF;
+                        while (usedColors.has(transColor)) {
+                            transColor = (transColor + 1) % 0x1000000; // Increment and wrap around (unlikely to loop much)
+                        }
+                        const transHex = '#' + transColor.toString(16).padStart(6, '0').toUpperCase();
 
-                    const tempCanvas = document.createElement('canvas');
-                    tempCanvas.width = this.canvas.width;
-                    tempCanvas.height = this.canvas.height;
-                    const tempContext = tempCanvas.getContext('2d');
-                    tempContext.fillStyle = transHex; // Use the dynamic placeholder
-                    tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-                    tempContext.drawImage(this.canvas, 0, 0);
+                        const tempCanvas = document.createElement('canvas');
+                        tempCanvas.width = this.canvas.width;
+                        tempCanvas.height = this.canvas.height;
+                        const tempContext = tempCanvas.getContext('2d');
+                        tempContext.fillStyle = transHex; // Use the dynamic placeholder
+                        tempContext.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                        tempContext.drawImage(this.canvas, 0, 0);
 
-                    const gif = new GIF({
-                        workers: 2,
-                        quality: 10,
-                        workerScript: '{{ asset('js/gif/gif.worker.js') }}', // Local worker script
-                        width: this.canvas.width,
-                        height: this.canvas.height,
-                        transparent: transColor // Use the dynamic integer value
+                        const gif = new GIF({
+                            workers: 2,
+                            quality: 10,
+                            workerScript: '{{ asset('js/gif/gif.worker.js') }}', // Local worker script
+                            width: this.canvas.width,
+                            height: this.canvas.height,
+                            transparent: transColor // Use the dynamic integer value
+                        });
+
+                        gif.addFrame(tempCanvas);
+
+                        gif.on('finished', (blob) => {
+                            resolve(blob);
+                        });
+
+                        gif.render();
                     });
+                },
 
-                    gif.addFrame(tempCanvas);
+                async generateCanvas(action) {
+                    const blob = await this.generateGifBlob();
 
-                    gif.on('finished', (blob) => {
+                    if (action === 'download') {
                         const url = URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
@@ -424,35 +439,39 @@
                         a.click();
                         document.body.removeChild(a);
                         URL.revokeObjectURL(url);
-                    });
-
-                    gif.render();
+                    }
                 },
 
-                buyBadge() {
-                    if (!confirm('{{ __('Are you sure you want to buy this badge for 150 credits?') }}')) return;
+                async buyBadge() {
+                    if (!confirm('Are you sure you want to buy this badge for {{ $cost }} {{ $currencyType }}?')) return;
 
-                    fetch('{{ route('badge.buy') }}', {  // Assuming a route named 'badge.buy' for the POST endpoint
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({})  // For now, empty body; later, add badge data for saving
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('{{ __('Badge purchased successfully! Credits deducted.') }}');
-                            // Optionally, refresh user credits display if available, or proceed to next steps
-                        } else {
-                            alert(data.message || '{{ __('Error: Insufficient credits or purchase failed.') }}');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('{{ __('An error occurred during the purchase.') }}');
-                    });
+                    const blob = await this.generateGifBlob();
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64data = reader.result;
+
+                        fetch('{{ route('badge.buy') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ badge_data: base64data })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Badge purchased and saved successfully! {{ ucfirst($currencyType) }} deducted.');
+                            } else {
+                                alert(data.message || 'Error: Insufficient {{ $currencyType }} or purchase failed.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred during the purchase.');
+                        });
+                    };
+                    reader.readAsDataURL(blob);
                 }
             }
         }
@@ -488,7 +507,7 @@
                 linear-gradient(45deg, #2a2a2a 25%, transparent 25%), 
                 linear-gradient(-45deg, #2a2a2a 25%, transparent 25%), 
                 linear-gradient(45deg, transparent 75%, #2a2a2a 75%), 
-                linear-gradient(-45deg, transparent 75%, #2a2a2a 75%);
+                linear_gradient(-45deg, transparent 75%, #2a2a2a 75%);
         }
         input[type="color"] {
             position: absolute;
