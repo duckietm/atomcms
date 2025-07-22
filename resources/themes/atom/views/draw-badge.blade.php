@@ -13,7 +13,7 @@
     <div class="col-span-12">
         <x-content.content-card icon="hotel-icon" classes="border dark:border-gray-900">
             <x-slot:title>
-                Badge Drawer
+                {{ __('Badge Drawer') }}
             </x-slot:title>
 
             <x-slot:under-title>
@@ -34,13 +34,13 @@
                             <canvas width="40" height="40" x-ref="canvas" class="w-full h-full border border-gray-300 dark:border-gray-700" style="image-rendering: pixelated; background: transparent;"></canvas>
                         </div>
                         <div class="flex flex-col w-full md:w-auto">
-                            <h3 class="font-bold mb-2">Preview</h3>
+                            <h3 class="font-bold mb-2">{{ __('Preview') }}</h3>
                             <div class="checkerboard w-10 h-10 md:w-[40px] md:h-[40px]">
                                 <canvas width="40" height="40" x-ref="previewCanvas" class="border border-gray-300 dark:border-gray-700" style="image-rendering: pixelated; background: transparent;"></canvas>
                             </div>
                             <div class="flex flex-wrap gap-4 mt-4 items-center">
                                 <div>
-                                    <label>Choose Color</label>
+                                    <label>{{ __('Choose Color') }}</label>
                                     <div @click="$refs.colorInput.click()" class="w-16 h-16 cursor-pointer flex items-center justify-center relative">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-[1.8rem] h-[1.8rem]" fill="none" stroke="black" stroke-width="1" viewBox="0 0 20 20">
                                             <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
@@ -55,7 +55,7 @@
                                     <div :style="'background-color: ' + color" class="w-16 h-16 border border-gray-300 dark:border-gray-700"></div>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold mb-1">Palette</h4>
+                                    <h4 class="font-bold mb-1">{{ __('Palette') }}</h4>
                                     <div class="grid grid-cols-6 gap-1">
                                         <template x-for="col in colors">
                                             <div @click="color = col; eraseMode = false" :style="'background-color: ' + col" class="w-6 h-6 cursor-pointer border border-gray-300 dark:border-gray-700"></div>
@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                             <div class="mt-2">
-                                <h4 class="font-bold mb-1">Recent</h4>
+                                <h4 class="font-bold mb-1">{{ __('Recent color') }}</h4>
                                 <div class="flex flex-row gap-[2px] overflow-x-auto">
                                     <template x-for="col in recentColors" :key="col">
                                         <div @click="color = col; eraseMode = false" :style="'background-color: ' + col" class="w-6 h-6 cursor-pointer border border-gray-300 dark:border-gray-700 flex-shrink-0"></div>
@@ -76,7 +76,7 @@
                             </div>
                             <div class="mt-2">
                                 <button @click="toggleCopyMode" class="flex items-center cursor-pointer">
-                                    Copy Color:
+                                    {{ __('Copy color:') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" fill="none" :stroke="copyMode ? 'red' : 'black'" stroke-width="1" viewBox="0 0 20 20">
                                         <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
                                         <g transform="translate(2,2)">
@@ -87,7 +87,7 @@
                             </div>
                             <div class="mt-2">
                                 <button @click="toggleEraseMode" class="flex items-center cursor-pointer">
-                                    Erase Mode:
+                                    {{ __('Erase mode:') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" :fill="eraseMode ? 'red' : 'black'" viewBox="0 0 20 20" stroke-width="0">
                                         <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
                                         <g transform="translate(2,2)">
@@ -98,7 +98,7 @@
                             </div>
                             <div class="mt-2">
                                 <button @click="$refs.fileInput.click()" class="flex items-center cursor-pointer">
-                                    Import Picture:
+                                    {{ __('Import Picture:') }}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" fill="none" stroke="black" stroke-width="1.5" viewBox="0 0 30 30">
                                         <circle cx="15" cy="15" r="15" fill="white" stroke="none"/>
                                         <g transform="translate(3,3)">
@@ -109,15 +109,15 @@
                                 <input type="file" accept="image/png,image/gif" x-ref="fileInput" style="display:none;" @change="importImage($event)">
                             </div>
                             <div class="mt-2">
-                                <label for="toggleGuide">Show Grid: </label>
+                                <label for="toggleGuide">{{ __('Show Grid:') }}</label>
                                 <input type="checkbox" id="toggleGuide" x-model="showGrid" checked>
                             </div>
                         </div>
                     </div>
                     <div class="mt-4 md:mt-10 flex flex-col md:flex-row gap-4 justify-between">
-                        <button type="button" @click="clearBoard" class="w-full rounded bg-red-600 hover:bg-red-700 text-white p-2 border-2 border-red-500 transition ease-in-out duration-150 font-semibold">Clear All</button>
+                        <button type="button" @click="clearBoard" class="w-full rounded bg-red-600 hover:bg-red-700 text-white p-2 border-2 border-red-500 transition ease-in-out duration-150 font-semibold">{{ __('Clear All') }}</button>
                         <button type="button" @click="generateCanvas('download')" class="w-full rounded bg-[#eeb425] text-white p-2 border-2 border-yellow-400 transition ease-in-out duration-200 hover:bg-[#d49f1c] font-semibold"> {{ __('Download badge') }} </button>
-                        <button type="button" @click="buyBadge" class="w-full rounded bg-green-600 hover:bg-green-700 text-white p-2 border-2 border-green-500 transition ease-in-out duration-150 font-semibold" :disabled="{{ $folderError ? 'true' : 'false' }}">Buy Badge ({{ $cost }} {{ ucfirst($currencyType) }})</button>
+                        <button type="button" @click="buyBadge" class="w-full rounded bg-green-600 hover:bg-green-700 text-white p-2 border-2 border-green-500 transition ease-in-out duration-150 font-semibold" :disabled="{{ $folderError ? 'true' : 'false' }}">{{ __('Buy Badge') }} ({{ $cost }} {{ ucfirst($currencyType) }})</button>
                     </div>
                 </div>
             </div>
