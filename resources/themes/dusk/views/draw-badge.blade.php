@@ -117,11 +117,11 @@
                             </div>
                             <div class="mt-2">
                                 <label for="badgeName">{{ __('Badge Name:') }}</label>
-                                <input type="text" id="badgeName" x-model="badgeName" maxlength="24" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1">
+                                <input type="text" id="badgeName" x-model="badgeName" maxlength="24" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1 text-black">
                             </div>
                             <div class="mt-2">
                                 <label for="badgeDescription">{{ __('Badge Description:') }}</label>
-                                <input type="text" id="badgeDescription" x-model="badgeDescription" maxlength="255" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1">
+                                <input type="text" id="badgeDescription" x-model="badgeDescription" maxlength="255" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1 text-black">
                             </div>
                         </div>
                     </div>
