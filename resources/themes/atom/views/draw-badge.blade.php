@@ -31,15 +31,43 @@
                     </div>
                 @endif
                 <div x-data="badgeDrawer({ cost: {{ $cost }}, currencyType: '{{ $currencyType }}' })" class="mt-4">
+                    <div class="mt-2 flex gap-4 items-center">
+                        <button @click="toggleCopyMode" class="flex items-center cursor-pointer">
+                            {{ __('Copy color:') }}
+                            <img src="/assets/images/badgecreator/pickcolor.png" class="w-5 h-5 inline ml-1" :class="{ 'tint-red': copyMode }" />
+                        </button>
+                        <button @click="toggleEraseMode" class="flex items-center cursor-pointer">
+                            {{ __('Erase mode:') }}
+                            <img src="/assets/images/badgecreator/removepixel.png" class="w-5 h-5 inline ml-1" :class="{ 'tint-red': eraseMode }" />
+                        </button>
+                        <button @click="$refs.fileInput.click()" class="flex items-center cursor-pointer">
+                            {{ __('Import Picture:') }}
+                            <img src="/assets/images/badgecreator/import.png" class="w-5 h-5 inline ml-1" />
+                        </button>
+                        <div class="flex items-center">
+                            <label for="toggleGuide" class="mr-2">{{ __('Show Grid:') }}</label>
+                            <input type="checkbox" id="toggleGuide" x-model="showGrid" checked>
+                        </div>
+                    </div>
+                    <input type="file" accept="image/png,image/gif" x-ref="fileInput" style="display:none;" @change="importImage($event)">
                     <div class="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
                         <div class="checkerboard w-full max-w-[640px] aspect-square relative">
-                            <div id="guide" x-ref="guide" class="border-t border-l border-gray-700 dark:border-white"></div>
+                            <div id="guide" x-ref="guide"></div>
                             <canvas width="40" height="40" x-ref="canvas" class="w-full h-full border border-gray-300 dark:border-gray-700" style="image-rendering: pixelated; background: transparent;"></canvas>
                         </div>
                         <div class="flex flex-col w-full md:w-auto">
                             <h3 class="font-bold mb-2">{{ __('Preview') }}</h3>
-                            <div class="checkerboard w-10 h-10 md:w-[40px] md:h-[40px]">
-                                <canvas width="40" height="40" x-ref="previewCanvas" class="border border-gray-300 dark:border-gray-700" style="image-rendering: pixelated; background: transparent;"></canvas>
+                            <div id="avatarbox">
+                                <div class="username"
+                                    style="font-size: 12px;margin-top: 13px;margin-left: 30px;color: #FFF;">
+                                    {{ auth()->user()->username}}
+                                </div>
+                                <div class="avatara"
+                                    style="float: left;background: url('{{ setting('avatar_imager') }}{{ auth()->user()->look}}&direction=4&head_direction=3') no-repeat;width: 60px;height: 120px;margin-left: 15px;margin-top: 10px;">
+                                </div>
+                                <div class="preview" style='float: left;margin-left: 15px;margin-top: 7px;'>
+                                    <canvas width="40" height="40" x-ref="previewCanvas" style="image-rendering: pixelated; background: transparent;"></canvas>
+                                </div>
                             </div>
                             <div class="flex flex-wrap gap-4 mt-4 items-center">
                                 <div>
@@ -55,7 +83,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div :style="'background-color: ' + color" class="w-16 h-16 border border-gray-300 dark:border-gray-700"></div>
+                                    <div :style="'background-color: ' + color" class="w-12 h-12 border border-gray-300 dark:border-gray-700"></div>
                                 </div>
                                 <div>
                                     <h4 class="font-bold mb-1">{{ __('Palette') }}</h4>
@@ -78,50 +106,12 @@
                                 </div>
                             </div>
                             <div class="mt-2">
-                                <button @click="toggleCopyMode" class="flex items-center cursor-pointer">
-                                    {{ __('Copy color:') }}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" fill="none" :stroke="copyMode ? 'red' : 'black'" stroke-width="1" viewBox="0 0 20 20">
-                                        <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
-                                        <g transform="translate(2,2)">
-                                            <path d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.147 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.853a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708zM2 12.707l7-7L10.293 7l-7 7H2z"/>
-                                        </g>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mt-2">
-                                <button @click="toggleEraseMode" class="flex items-center cursor-pointer">
-                                    {{ __('Erase mode:') }}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" :fill="eraseMode ? 'red' : 'black'" viewBox="0 0 20 20" stroke-width="0">
-                                        <circle cx="10" cy="10" r="10" fill="white" stroke="none"/>
-                                        <g transform="translate(2,2)">
-                                            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l3.879-3.879a2 2 0 0 1 2.828 0zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414L10.207 2.914zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
-                                        </g>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div class="mt-2">
-                                <button @click="$refs.fileInput.click()" class="flex items-center cursor-pointer">
-                                    {{ __('Import Picture:') }}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline ml-1" fill="none" stroke="black" stroke-width="1.5" viewBox="0 0 30 30">
-                                        <circle cx="15" cy="15" r="15" fill="white" stroke="none"/>
-                                        <g transform="translate(3,3)">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"/>
-                                        </g>
-                                    </svg>
-                                </button>
-                                <input type="file" accept="image/png,image/gif" x-ref="fileInput" style="display:none;" @change="importImage($event)">
-                            </div>
-                            <div class="mt-2">
-                                <label for="toggleGuide">{{ __('Show Grid:') }}</label>
-                                <input type="checkbox" id="toggleGuide" x-model="showGrid" checked>
-                            </div>
-                            <div class="mt-2">
                                 <label for="badgeName">{{ __('Badge Name:') }}</label>
-                                <input type="text" id="badgeName" x-model="badgeName" maxlength="24" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1">
+                                <input type="text" id="badgeName" x-model="badgeName" maxlength="24" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1 text-black">
                             </div>
                             <div class="mt-2">
                                 <label for="badgeDescription">{{ __('Badge Description:') }}</label>
-                                <input type="text" id="badgeDescription" x-model="badgeDescription" maxlength="255" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1">
+                                <input type="text" id="badgeDescription" x-model="badgeDescription" maxlength="255" class="w-full border border-gray-300 dark:border-gray-700 rounded p-1 text-black">
                             </div>
                         </div>
                     </div>
@@ -134,7 +124,7 @@
             </div>
         </x-content.content-card>
     </div>
-
+    
     <script src="{{ asset('js/gif/gif.js') }}"></script>
 
     <script>
@@ -184,26 +174,48 @@
                     const canvasWidth = this.canvas.clientWidth;
                     const cellSize = canvasWidth / this.cellSideCount;
 
-                    // Setup the guide grid
+                    // Setup the guide with dynamic grid lines using gradients (no borders, no child divs)
                     this.guide.style.width = `${canvasWidth}px`;
-                    this.guide.style.height = `${canvasWidth}px`; // Square canvas
-                    this.guide.style.gridTemplateColumns = `repeat(${this.cellSideCount}, ${cellSize}px)`;
-                    this.guide.style.gridTemplateRows = `repeat(${this.cellSideCount}, ${cellSize}px)`;
+                    this.guide.style.height = `${canvasWidth}px`;
 
-                    // Clear any existing children
+                    // Clear any existing children (no longer needed)
                     this.guide.innerHTML = '';
 
-                    // Create grid cells
-                    for (let i = 0; i < this.cellSideCount * this.cellSideCount; i++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'border-b border-r border-gray-700 dark:border-white';
-                        this.guide.appendChild(cell);
-                    }
+                    // Determine border color based on dark mode
+                    const isDark = document.documentElement.classList.contains('dark');
+                    const borderColor = isDark ? '#fff' : '#4b5563'; // gray-700
 
-                    // Watch for grid toggle
+                    // Set grid lines as background gradients
+                    this.guide.style.backgroundImage = `
+                        repeating-linear-gradient(to bottom, ${borderColor} 0px 1px, transparent 1px ${cellSize}px),
+                        repeating-linear-gradient(to right, ${borderColor} 0px 1px, transparent 1px ${cellSize}px)
+                    `;
+
+                    // Watch for grid toggle (use block instead of grid)
                     this.$watch('showGrid', (value) => {
-                        this.guide.style.display = value ? 'grid' : 'none';
+                        this.guide.style.display = value ? 'block' : 'none';
                     });
+
+                    // Make checkerboard dynamic and aligned to cellSize
+                    const checkerboardEl = this.$el.querySelector('.checkerboard');
+                    let bgColor, checkColor;
+                    if (isDark) {
+                        bgColor = '#1a1a1a';
+                        checkColor = '#2a2a2a';
+                    } else {
+                        bgColor = '#fff';
+                        checkColor = '#eee';
+                    }
+                    const checkUnit = cellSize / 2; // Half cell for finer checks (2x2 per cell)
+                    checkerboardEl.style.backgroundColor = bgColor;
+                    checkerboardEl.style.backgroundImage = `
+                        linear-gradient(45deg, ${checkColor} 25%, transparent 25%),
+                        linear-gradient(-45deg, ${checkColor} 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, ${checkColor} 75%),
+                        linear-gradient(-45deg, transparent 75%, ${checkColor} 75%)
+                    `;
+                    checkerboardEl.style.backgroundSize = `${checkUnit * 2}px ${checkUnit * 2}px`;
+                    checkerboardEl.style.backgroundPosition = `0 0, 0 ${checkUnit}px, ${checkUnit}px -${checkUnit}px, -${checkUnit}px 0px`;
 
                     // Watch for erase/copy toggle
                     this.$watch('eraseMode', (value) => {
@@ -211,15 +223,6 @@
                     });
                     this.$watch('copyMode', (value) => {
                         if (value) this.eraseMode = false;
-                    });
-
-                    // Update recent colors
-                    this.$watch('color', (newColor) => {
-                        this.recentColors = this.recentColors.filter(c => c !== newColor);
-                        this.recentColors.unshift(newColor);
-                        if (this.recentColors.length > 12) {
-                            this.recentColors = this.recentColors.slice(0, 12);
-                        }
                     });
 
                     // Mouse events
@@ -388,7 +391,15 @@
                                     const b = importedImageData.data[index + 2];
                                     const a = importedImageData.data[index + 3];
                                     if (a > 0) {
-                                        this.colorHistory[`${x}_${y}`] = this.rgbToHex(r, g, b);
+                                        const hexColor = this.rgbToHex(r, g, b);
+                                        this.colorHistory[`${x}_${y}`] = hexColor;
+                                        // Add to recentColors
+                                        if (!this.recentColors.includes(hexColor)) {
+                                            this.recentColors.unshift(hexColor);
+                                            if (this.recentColors.length > 12) {
+                                                this.recentColors = this.recentColors.slice(0, 12);
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -415,6 +426,13 @@
                         this.drawingContext.fillStyle = this.color;
                         this.drawingContext.fillRect(cellX, cellY, 1, 1);
                         this.colorHistory[`${cellX}_${cellY}`] = this.color;
+                        // Add to recentColors only when painting
+                        if (!this.recentColors.includes(this.color)) {
+                            this.recentColors.unshift(this.color);
+                            if (this.recentColors.length > 12) {
+                                this.recentColors = this.recentColors.slice(0, 12);
+                            }
+                        }
                     }
                     this.updatePreview();
                 },
@@ -423,6 +441,7 @@
                     if (!confirm('Clear the entire board?')) return;
                     this.drawingContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
                     this.colorHistory = {};
+                    this.recentColors = []; // Clear recent colors as well
                     this.updatePreview();
                 },
 
@@ -577,32 +596,16 @@
             cursor: pointer;
         }
         #guide {
-            display: grid;
+            display: block;
             pointer-events: none;
             position: absolute;
             top: 0;
             left: 0;
-        }
-        #guide > div {
-            box-sizing: border-box;
+            background-repeat: repeat;
         }
         .checkerboard {
-            background-color: #fff;
-            background-image: 
-                linear-gradient(45deg, #eee 25%, transparent 25%), 
-                linear-gradient(-45deg, #eee 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #eee 75%), 
-                linear-gradient(-45deg, transparent 75%, #eee 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
         .dark .checkerboard {
-            background-color: #1a1a1a;
-            background-image: 
-                linear-gradient(45deg, #2a2a2a 25%, transparent 25%), 
-                linear-gradient(-45deg, #2a2a2a 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #2a2a2a 75%), 
-                linear-gradient(-45deg, transparent 75%, #2a2a2a 75%);
         }
         input[type="color"] {
             position: absolute;
@@ -611,6 +614,15 @@
             bottom: 0;
             right: 0;
             transform: translateY(100%);
+        }
+        #avatarbox {
+            background: url('/assets/images/badgecreator/avatarbox.png');
+            width: 199px;
+            height: 180px;
+            float: right;
+        }
+        .tint-red {
+            filter: invert(21%) sepia(87%) saturate(4855%) hue-rotate(346deg) brightness(91%) contrast(92%);
         }
     </style>
 </x-app-layout>
