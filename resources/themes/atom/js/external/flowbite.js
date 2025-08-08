@@ -1983,7 +1983,7 @@ reference element's position.
         };
     }
     var createPopper =
-        /*#__PURE__*/ /* unused pure expression or super */ null &&
+        null &&
         popperGenerator(); // eslint-disable-next-line import/no-unused-modules // CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/modifiers/eventListeners.js
 
     // eslint-disable-next-line import/no-unused-modules

@@ -3,6 +3,7 @@
 use App\Actions\Fortify\Controllers\TwoFactorAuthenticatedSessionController;
 use App\Http\Controllers\Articles\ArticleController;
 use App\Http\Controllers\Articles\WebsiteArticleCommentsController;
+use App\Http\Controllers\Badge\BadgeController;
 use App\Http\Controllers\Client\FlashController;
 use App\Http\Controllers\Client\NitroController;
 use App\Http\Controllers\Community\LeaderboardController;
@@ -97,9 +98,15 @@ Route::middleware(['maintenance', 'check.ban', 'force.staff.2fa'])->group(functi
                 Route::get('/session-logs', [AccountSettingsController::class, 'sessionLogs'])->name('settings.session-logs');
 
                 Route::get('/two-factor', [TwoFactorAuthenticationController::class, 'index'])->name('settings.two-factor');
-                Route::post('/2fa-verify', [TwoFactorAuthenticationController::class, 'verify'])->name('two-factor.verify');
+				Route::post('/user/settings/two-factor-authentication', [TwoFactorAuthenticationController::class, 'store'])->name('user.two-factor.enable');
+				Route::post('/2fa-verify', [TwoFactorAuthenticationController::class, 'verify'])->name('two-factor.verify');
+				Route::delete('/user/settings/two-factor-authentication', [TwoFactorAuthenticationController::class, 'destroy'])->name('user.two-factor.disable');
             });
         });
+		
+		// Drawbadge
+		Route::get('/draw-badge', [BadgeController::class, 'show'])->name('draw-badge');
+		Route::post('/buy-badge', [BadgeController::class, 'buy'])->name('badge.buy');		
 
         // Profiles
         Route::get('/profile/{user:username}', ProfileController::class)->name('profile.show');
@@ -194,7 +201,6 @@ Route::middleware(['maintenance', 'check.ban', 'force.staff.2fa'])->group(functi
 
 if (Features::enabled(Features::twoFactorAuthentication())) {
     $twoFactorLimiter = config('fortify.limiters.two-factor');
-
     Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
         ->middleware(
             array_filter([

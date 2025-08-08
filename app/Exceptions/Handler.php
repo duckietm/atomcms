@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Support\Facades\View;
 
 class Handler extends ExceptionHandler
 {
@@ -35,6 +36,20 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    public function render($request, Throwable $exception)
+    {
+        if ($this->isHttpException($exception)) {
+            $status = $exception->getStatusCode();
+            $view = "errors.{$status}"; // Theme-specific error view (e.g., errors.503)
+
+            if (View::exists($view)) {
+                return response()->view($view, ['exception' => $exception], $status);
+            }
+        }
+
+        return parent::render($request, $exception);
+    }
 
     /**
      * Register the exception handling callbacks for the application.

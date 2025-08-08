@@ -7,7 +7,7 @@
                 <div
                     class="col-span-3 md:col-span-1 h-[150px] lg:h-[220px] profile-bg rounded-lg relative flex gap-x-2 items-center text-white overflow-hidden">
                     <img class="mt-14 drop-shadow lg:mt-0" style="image-rendering: pixelated;"
-                        src="{{ setting('avatar_imager') }}{{ $user->look }}&direction=2&head_direction=3&gesture=sml&action=wav&size=l"
+                        src="{{ setting('avatar_imager') }}{{ $user->look }}&direction=2&head_direction=3&gesture=sml&size=l&action=wav&img_format=gif"
                         alt="">
 
                     <div class="flex flex-col">
